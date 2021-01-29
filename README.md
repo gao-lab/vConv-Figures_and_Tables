@@ -1,15 +1,20 @@
 # Table of contents
 
 - [vConv paper](#vconv-paper)
-- [Prerequisites for all](#prerequisites-for-all)
-  * [Basics](#basics)
-  * [Python packages](#python-packages)
-  * [R packages](#r-packages)
-  * [the vConv layer](#the-vconv-layer)
+- [Prerequisites](#prerequisites)
+  * [Prerequisites for all but training Basset-related models](#prerequisites-for-all-but-training-basset-related-models)
+    + [Basics](#basics)
+    + [Python packages](#python-packages)
+    + [R packages](#r-packages)
+    + [the vConv layer](#the-vconv-layer)
+  * [Prerequisites for training Basset-related models](#prerequisites-for-training-basset-related-models)
+    + [Basics](#basics)
 - [Step 1: Reproduce Figures 2-3, Supplementary Figures 5-10, and Supplementary Tables 2-3 (benchmarking models on motif identification)](#step-1-reproduce-figures-2-3-supplementary-figures-5-10-and-supplementary-tables-24-benchmarking-models-on-motif-identification)
   * [1.1 Prepare datasets](#11-prepare-datasets)
   * [1.2 Train and evaluate models needed for reproducing these figures](#12-train-and-evaluate-models-needed-for-reproducing-these-figures)
     + [1.2.1 Train the models directly](#121-train-the-models-directly)
+      - [1.2.1.1 Train all but Basset-related models](#1211-train-all-but-basset-related-models)
+      - [1.2.1.2 Train Basset-related models](#1212-train-basset-related-models)
     + [1.2.2 Use the pre-trained results](#122-use-the-pre-trained-results)
   * [1.3 Prepare summary files for reproducing figures and tables from datasets and results above](#13-prepare-summary-files-for-reproducing-figures-and-tables-from-datasets-and-results-above)
   * [1.4 Reproduce Figures](#14-reproduce-figures)
@@ -28,8 +33,8 @@
   * [2.2 Generate results needed by Figure 4](#22-generate-results-needed-by-figure-4)
     + [2.2.1 Generate the results](#221-generate-the-results)
       - [2.2.1.1 step (1)](#2211-step-1)
-      - [2.2.1.2 step (2)](#2212-step-2)
-      - [2.2.1.3 steps (3-5)](#2213-steps-3-5)
+      - [2.2.1.2 steps (2-3)](#2212-steps-2-3)
+      - [2.2.1.3 steps (4-5)](#2213-steps-4-5)
     + [2.2.2 Use the pre-computed version](#222-use-the-pre-computed-version)
   * [2.3 Reproduce Figure 4](#23-reproduce-figure-4)
 - [Step 3: Reproduce Supplementary Fig. 11 B-I (theoretical analysis)](#step-3-reproduce-supplementary-fig-11-b-i-theoretical-analysis)
@@ -41,9 +46,10 @@ This is the repository for reproducing figures and tables in the paper [Identify
 
 A Keras-based implementation of vConv is available at [https://github.com/gao-lab/vConv](https://github.com/gao-lab/vConv).
 
-# Prerequisites for all
+# Prerequisites
+## Prerequisites for all but training Basset-related models
 
-## Basics
+### Basics
 
 
 - Imagemagick
@@ -55,7 +61,7 @@ A Keras-based implementation of vConv is available at [https://github.com/gao-la
 - CisFinder
 
 
-## Python packages
+### Python packages
 
 - numpy
 - h5py
@@ -71,7 +77,7 @@ Alternatively, if you want to guarantee working versions of each dependency, you
 conda env create -f corecode/environment_vConv.yml
 ```
 
-## R packages
+### R packages
 
 - ggpubr
 - data.table
@@ -80,12 +86,20 @@ conda env create -f corecode/environment_vConv.yml
 - ggseqlogo
 - magick
 
-## the vConv layer
+### the vConv layer
 ```{bash}
 rm -fr ./vConv
 git clone https://github.com/gao-lab/vConv
 cp -r ./vConv/corecode ./
 ```
+
+## Prerequisites for training Basset-related models
+
+- Python 3
+- Follow the 'Installation' instruction at here to install Basenji: https://github.com/calico/basenji , with the following modifications:
+  - Must use CUDA 10.0
+  - Must use tensorflow version 2.3.4
+    - We wrote a tensorflow-2.3.4-compatible vConv for Basset in our code (see codes in the section 'Train basset-related model' below). Currently we do not support vConv for this version of tensorflow publicly.
 
 # Step 1: Reproduce Figures 2-3, Supplementary Figures 5-10, and Supplementary Tables 2,4 (benchmarking models on motif identification)
 
@@ -109,9 +123,12 @@ cd -
 
 ## 1.2 Train and evaluate models needed for reproducing these figures
 
-The training takes about 15 days on a server with 1 CPU cores, 32G memory, and one NVIDIA 1080 Ti GPU card. The user can either train the models by themselves or use the pre-trained results.
+The training takes about 18 days on a server with 1 CPU cores, 32G memory, and one NVIDIA 1080 Ti GPU card. The user can either train the models by themselves or use the pre-trained results.
 
 ### 1.2.1 Train the models directly
+
+#### 1.2.1.1 Train all but Basset-related models
+
 - Run the following codes to train the models.
 
 ```{bash}
@@ -143,8 +160,11 @@ cd -
 ```
 
 
+#### 1.2.1.2 Train Basset-related models
 
-install basenji from https://github.com/calico/basenji
+- Here the user needs to switch to the basenji environment.
+- After finishing training, the user needs to deactivate the basenji environment to run other codes.
+
 ```{bash}
 cd ./basset/vConv/9layersvConv/
 python TrainBasenjiBasset.py
