@@ -1,0 +1,9 @@
+,cnn.kernel,ground.truth,motif,vconv.kernel
+0,./output/ModelAUC/JasperMotif//motifCNN/8/PairMotif/MA0009.214_114_0.0.txt,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0009.2.txt,MA0009.2,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0009.217_73_0.0.txt
+1,NA,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0234.1.txt,MA0234.1,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0234.113_2_0.0001.txt
+2,./output/ModelAUC/JasperMotif//motifCNN/8/PairMotif/MA0470.114_64_0.0.txt,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0470.1.txt,MA0470.1,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0470.114_16_0.0.txt
+3,./output/ModelAUC/JasperMotif//motifCNN/8/PairMotif/MA0626.114_59_0.0.txt,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0626.1.txt,MA0626.1,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0626.113_64_0.0.txt
+4,./output/ModelAUC/JasperMotif//motifCNN/8/PairMotif/MA0667.114_92_0.0.txt,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0667.1.txt,MA0667.1,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0667.114_97_0.0.txt
+5,./output/ModelAUC/JasperMotif//motifCNN/8/PairMotif/MA0963.114_118_0.0.txt,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0963.1.txt,MA0963.1,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA0963.112_30_3e-05.txt
+6,./output/ModelAUC/JasperMotif//motifCNN/8/PairMotif/MA1146.114_74_0.0.txt,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA1146.1.txt,MA1146.1,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA1146.116_17_0.0.txt
+7,./output/ModelAUC/JasperMotif//motifCNN/8/PairMotif/MA1147.114_74_0.0.txt,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA1147.1.txt,MA1147.1,./output/ModelAUC/JasperMotif//motif/8/PairMotif/MA1147.116_17_0.0.txt
