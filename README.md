@@ -327,13 +327,13 @@ cd -
 ## generate motifs by CisFinder, DREME, and MEME-ChIP
 cd ./vConvMotifDiscovery/code/MLtools
 python generateMotifsByCisFinder.py
-python Dreme.py
+python generateMotifsByDREME.py
 python generateMotifsByMEMEChIP.py
 cd -
 
 ## generate motifs by vConv-based
 cd ./vConvMotifDiscovery/code/vConvBased
-python TrainVCNNB.py
+python generateMotifsByVConvBasedNetworks.py
 cd -
 
 ```
@@ -382,8 +382,8 @@ The figure generated is located at `vConvFigmain/result/Fig.4/Fig.4.png`
 
 ```{bash}
 cd theoretical/code/
-python runSimuIC.py
-python CNN.py
+python runSimulation.py
+python trainCNN.py
 cd -
 ```
 
