@@ -23,4 +23,4 @@ F2B.ggplot <- ggbarplot(data=auroc.dt, x="dataset.to.plot", y="AUROC.increment",
 
 ggarrange(plotlist=list(F2A.ggplot, F2B.ggplot), ncol=1, labels=c("A", "B"), heights=c(0.45, 0.55)) %>% {ggsave(filename="./vConvFigmain/result/Fig.2/Fig.2.png", plot=., device="png", width=20, height=18, units="cm")}
 
-F2B.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.2/Additional.Fig.5.png", plot=., device="png", width=14, height=12, units="cm")}
+F2B.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.2/Additional.Fig.5.pdf", plot=., device="pdf", width=14, height=12, units="cm")}
