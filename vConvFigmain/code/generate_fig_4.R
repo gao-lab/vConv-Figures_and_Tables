@@ -8,6 +8,7 @@ library("pdftools")
 dir.create("./vConvFigmain/result/Fig.4/", recursive=TRUE)
 
 pipeline.trimmed.ggplot <- image_read_pdf("./vConvFigmain/Pictures/pictures.pdf", pages=2) %>% image_trim %>% image_ggplot
+pipeline.trimmed.ggplot <- image_read("./vConvFigmain/F4A.image") %>% image_trim %>% image_ggplot
 
 
 accuracy.increment.dt <- fread("./vConvFigmain/files.F4B/res.csv") %>% setnames(1, "index") %>% {melt(data=., id.vars="index", variable.name="tool", value.name="accuracy.increment")} %>% {.[, tool.to.plot:=factor(tool, levels=c("CisFinder", "DREME", "MEME-ChIP"))]}
