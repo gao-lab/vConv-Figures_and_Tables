@@ -42,7 +42,7 @@
   * [3.2 Reproduce Supplementary Fig. 11 B-I](#32-reproduce-supplementary-fig-11-b-i)
 
 # vConv paper
-This is the repository for reproducing figures and tables in the paper [Identifying complex sequence patterns with a variable-convolutional layer effectively and efficiently](https://doi.org/10.1101/508242).
+This is the repository for reproducing figures and tables in the paper [Identifying complex sequence patterns in massive omics data with a variable-convolutional layer in deep neural network](https://doi.org/10.1101/508242).
 
 A Keras-based implementation of vConv is available at [https://github.com/gao-lab/vConv](https://github.com/gao-lab/vConv).
 
