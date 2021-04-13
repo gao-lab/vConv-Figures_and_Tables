@@ -16,6 +16,8 @@ all.metrics.dt <- fread("./vConvMotifDiscovery/output/res/all_metrics.csv.gz")
 all.best.metrics.dt <- all.metrics.dt %>%
     {.[, .SD[which.max(recall)], list(filename, tool, threshold)]}
 
+
+## compute AUROC with (1-specificity=1, recall=1)
 all.best.AUROC.dt <- all.best.metrics.dt %>%
     {.[, list(AUROC=), list(filename, tool)]}
     
