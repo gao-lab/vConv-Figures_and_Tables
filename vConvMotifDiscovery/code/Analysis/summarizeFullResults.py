@@ -48,10 +48,15 @@ def ComputeMetricsForASingleDataset(filename):
 
     all_rows_list = []
     for key in f.keys():
-        temp_values = f[key].value
-        for threshold in range(10, 205, 5):
-            TP = np.where(temp_values<threshold)[0].shape[0]
-            FP = temp_values.shape[0] - TP
+        temp_value_matrix = f[key].value
+        temp_score_values = temp_value_matrix[:, 1]
+        if (temp_score_values.min() == temp_score_values.max()):
+            print("Skip dataset " + filename + " X tool-motif " + key +  " because all fragment scores are the same in this combination")
+            continue
+        for threshold in np.arange(temp_score_values.min(), temp_score_values.max(), (temp_score_values.max() - temp_score_values.min())/40):
+            temp_dist_values_of_valid_hits = temp_value_matrix[(temp_score_values > threshold), 0]
+            TP = np.where(temp_dist_values_of_valid_hits<=100)[0].shape[0]
+            FP = temp_dist_values_of_valid_hits.shape[0] - TP
             FN = FastaShape - TP
             TN = FastaShape * 2 - FP
             total = TP + FP + FN + TN            
