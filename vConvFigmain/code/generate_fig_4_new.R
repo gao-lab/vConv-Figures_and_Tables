@@ -17,11 +17,51 @@ all.best.metrics.dt <- all.metrics.dt %>%
     {.[, .SD[which.max(recall)], list(filename, tool, threshold)]}
 
 
-## compute AUROC with (1-specificity=1, recall=1)
-all.best.AUROC.dt <- all.best.metrics.dt %>%
-    {.[, list(AUROC=), list(filename, tool)]}
-    
-all.best.metrics.at.threshold.100.dt <- all.best.metrics.dt[threshold==100]
+## compute AUROC with  (1-speicificty, recall) ordered by "1-specificity" appended with (1-specificity=1, recall=1)
+all.best.metrics.AUROC.with.inc.dt <- all.best.metrics.dt %>%
+    {.[, list(
+         AUROC=order(1-specificity) %>% {trapz(x=c((1-specificity)[.], 1), y=c(recall[.], 1))},
+         AUPRC=order(recall) %>% {trapz(x=recall[.], y=precision[.])}),
+       ## must not use 'key' (i.e., different motifs of the same tool) here because for each tool we do not distinguish between different motifs
+       list(filename, tool)]} %>%
+    {melt(data=., id.vars=c("filename", "tool"),
+          measure.vars=c("AUROC", "AUPRC"),
+          variable.name="metric.name", value.name="metric.value")} %>%
+    {.[, metric.value.inc.by.vConv:=.SD[tool=='VCNNB', metric.value] - metric.value, list(filename, metric.name)]}
+
+## plot AUROC
+all.best.metrics.AUROC.with.inc.dt %>%
+    {ggplot(.[tool != 'VCNNB'], aes(x=tool, y=metric.value.inc.by.vConv, fill=tool)) +
+         geom_boxplot() +
+         geom_hline(yintercept=0, linetype="dashed") + 
+         theme_pubr() +
+         labs(x="") +
+         facet_grid(metric.name~., scales="free_y") +
+         theme(axis.text.x=element_blank())
+    }
+
+
+
+## pick a decent threshold (for now we use `threshold==0`)
+all.best.metrics.with.exemplary.threshold.with.inc.dt <- all.best.metrics.dt[threshold==0] %>%
+    {melt(data=., id.vars=c("filename", "tool", "key"),
+          measure.vars=c("precision", "recall", "specificity", "accuracy", "kappa"),
+          variable.name="metric.name", value.name="metric.value")} %>%
+    {.[, metric.value.inc.by.vConv:=.SD[tool=='VCNNB', metric.value] - metric.value, list(filename, metric.name)]}
+
+
+## plot other metrics with the decent threshold
+all.best.metrics.with.exemplary.threshold.with.inc.dt %>%
+    {ggplot(.[tool != 'VCNNB' ], aes(x=tool, y=metric.value.inc.by.vConv, fill=tool)) +
+         geom_boxplot() +
+         geom_hline(yintercept=0, linetype="dashed") + 
+         theme_pubr() +
+         labs(x="") +
+         facet_grid(metric.name~., scales="free_y") + 
+         theme(axis.text.x=element_blank())
+    }
+
+
 
 accuracy.increment.dt <- fread("./vConvFigmain/files.F4B/res.csv") %>% setnames(1, "index") %>% {melt(data=., id.vars="index", variable.name="tool", value.name="accuracy.increment")} %>% {.[, tool.to.plot:=factor(tool, levels=c("CisFinder", "DREME", "MEME-ChIP"))]}
 
