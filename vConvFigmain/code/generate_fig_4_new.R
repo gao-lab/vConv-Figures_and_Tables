@@ -3,7 +3,7 @@ library("magrittr")
 library("ggpubr")
 library("data.table")
 library("pracma")
-
+library("foreach")
 
 
 dir.create("./vConvFigmain/result/Fig.4/", recursive=TRUE)
@@ -35,7 +35,7 @@ all.best.metrics.AUROC.with.inc.dt %>%
          geom_boxplot() +
          geom_hline(yintercept=0, linetype="dashed") + 
          theme_pubr() +
-         labs(x="") +
+         labs(x="", y="Improvement by vConv-based motif discovery") +
          facet_grid(metric.name~., scales="free_y") +
          theme(axis.text.x=element_blank())
     }
@@ -45,7 +45,7 @@ all.best.metrics.AUROC.with.inc.dt %>%
 ## pick a decent threshold (for now we use `threshold==0`)
 all.best.metrics.with.exemplary.threshold.with.inc.dt <- all.best.metrics.dt[threshold==0] %>%
     {melt(data=., id.vars=c("filename", "tool", "key"),
-          measure.vars=c("precision", "recall", "specificity", "accuracy", "kappa"),
+          measure.vars=c("TP", "TN", "FP", "FN", "precision", "recall", "specificity", "accuracy", "kappa"),
           variable.name="metric.name", value.name="metric.value")} %>%
     {.[, metric.value.inc.by.vConv:=.SD[tool=='VCNNB', metric.value] - metric.value, list(filename, metric.name)]}
 
@@ -56,10 +56,31 @@ all.best.metrics.with.exemplary.threshold.with.inc.dt %>%
          geom_boxplot() +
          geom_hline(yintercept=0, linetype="dashed") + 
          theme_pubr() +
-         labs(x="") +
-         facet_grid(metric.name~., scales="free_y") + 
+         labs(x="", y="Improvement by vConv-based motif discovery") +
+         facet_wrap(~metric.name, scales="free_y", ncol=2) + 
          theme(axis.text.x=element_blank())
     }
+
+## plot radar plot 
+
+## plot radar plot
+
+all.best.metrics.with.exemplary.threshold.with.inc.dt[filename %in% all.best.metrics.with.exemplary.threshold.with.inc.dt[1:100, filename]] %>%
+    {.[metric.name %in% c("precision", "recall", "specificity", "accuracy", "kappa")]} %>%
+    {.[tool != 'VCNNB']} %>%
+    {.[, data.table(prob=c("25%", "50%", "75%"), quantile.value=quantile(metric.value, probs=c(0.25, 0.5, 0.75))), list(tool, metric.name)]} %>%
+    {ggplot(., aes(x=metric.name, y=quantile.value,  group=1, fill=prob)) +
+         geom_point(alpha=0.3) +
+         coord_polar() + 
+         facet_grid(tool~prob) 
+    }
+
+    
+    {dcast(., filename + tool ~ metric.name, value.var="metric.value")} %>%
+    {foreach(temp.filename=.[, filename] %>% unique %>% sort) %do% {
+        ggradar(.[filename == temp.filename, list(tool, precision, recall, specificity, accuracy, kappa)]) + guides(color=FALSE)
+    }} %>%
+    {ggarrange(plotlist=., nrow=4, ncol=6)}
 
 
 
