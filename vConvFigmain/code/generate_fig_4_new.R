@@ -49,17 +49,22 @@ AUC.ggplot <- all.best.metrics.AUROC.with.inc.dt %>%
     }
 
 
-## pick a decent threshold (for now we use `threshold==0`)
-all.best.metrics.with.exemplary.threshold.with.inc.dt <- all.best.metrics.dt[threshold==0] %>%
-    {melt(data=., id.vars=c("filename", "tool", "tool.description", "key"),
-          measure.vars=c("precision", "recall", "specificity", "accuracy", "kappa"),
-          variable.name="metric.name", value.name="metric.value")} %>%
+## pick the best model per 'filename x tool' across different thresholds
+all.best.metrics.with.exemplary.threshold.with.inc.dt <- all.best.metrics.dt %>%
+    ## pick a decent threshold (for now we use the one with the best accuracy per "filename x tool")
+    {.[, .SD[which.max(accuracy)], list(filename, tool)]} %>%
+    {melt(
+         data=.,
+         id.vars=c("filename", "tool", "tool.description", "key"),
+         measure.vars=c("precision", "recall", "specificity", "accuracy", "kappa"),
+         variable.name="metric.name", value.name="metric.value")
+    } %>%
     {.[, metric.value.inc.by.vConv:=.SD[tool=='VCNNB', metric.value] - metric.value, list(filename, metric.name)]}
 
 
 ## plot other metrics with the decent threshold
 metrics.at.exemplary.threshold.ggplot <- all.best.metrics.with.exemplary.threshold.with.inc.dt %>%
-    {ggplot(.[tool != 'VCNNB' ], aes(x=tool.description, y=metric.value.inc.by.vConv, fill=tool)) +
+    {ggplot(.[tool != 'VCNNB' ], aes(x=tool.description, y=metric.value.inc.by.vConv, fill=tool.description)) +
          geom_boxplot() +
          geom_hline(yintercept=0, linetype="dashed") + 
          theme_pubr() +
