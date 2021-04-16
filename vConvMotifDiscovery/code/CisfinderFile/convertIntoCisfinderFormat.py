@@ -26,7 +26,6 @@ def VCNNBFileIntoCisfinDer():
     :return:
     """
     AlldataPath = glob.glob(RootPath + "/result/vCNNB/wgEncodeAwgTfbs*")
-    pdb.set_trace()
     for files in AlldataPath:
         filename = files.split("/")[-1]
 
@@ -37,7 +36,7 @@ def VCNNBFileIntoCisfinDer():
 
         for i, motif in enumerate(Motifs):
             # MotifTitleTem = MotifTitle[:4] + str(i) + MotifTitle[5:8] + filename[15:]
-            MotifTitleTem = "<M00" + str(i)
+            MotifTitleTem = ">M00" + str(i)
 
             kernel = np.loadtxt(motif)
 
@@ -106,13 +105,10 @@ def dremeFileIntoCisFinder():
                     Num = 0
                     LineIsMotif = True
                     MotifNum = MotifNum + 1
-                    if MotifNum > 3:
-                        break
                     f.write(">dreme"+ str(MotifNum) + "\n")
                 elif line=="\n":
                     LineIsMotif = False
-                if MotifNum>3:
-                    break
+
 
         else:
             print("wrong:"+motif_path)
@@ -157,13 +153,10 @@ def MemeChipFileIntoCisFinder():
                     Num = 0
                     LineIsMotif = True
                     MotifNum = MotifNum + 1
-                    if MotifNum > 3:
-                        break
                     f.write(">MemeChip" + str(MotifNum) + "\n")
                 elif line == "\n":
                     LineIsMotif = False
-                if MotifNum > 3:
-                    break
+
         else:
             print("wrong:" + motif_path)
 

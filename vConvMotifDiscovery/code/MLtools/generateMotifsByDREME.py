@@ -20,7 +20,7 @@ for file in InputFilelist:
     if not os.path.exists(outputDir + "/dreme.txt"):
         print(filename)
         print("not exist")
-        cmd = "sbatch dreme.sh " + outputDir + " " +file
+        cmd = "bash dreme.sh " + outputDir + " " +file
         os.system(cmd)
 
 

@@ -18,7 +18,7 @@ def run_Simulation_data(KernelLen, KernelNum, RandomSeed,rho, epsilon):
 
         ret = [it.split("/")[-1].replace("(", "/(") +"/" for it in pre]
         return ret
-    cmd = "/home/lijy/anaconda2/bin/ipython ../../corecode/main.py"
+    cmd = "python ../../corecode/main.py"
     mode_lst = ["CNN"]
 
     data_root = "../../data/JasperMotif/HDF5/"

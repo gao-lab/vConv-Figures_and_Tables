@@ -147,7 +147,6 @@ def GeneRatePairPwm():
         print("finish "+ motifpari[0])
 
     print("motifs number: ",len(set(motifNum)))
-    pdb.set_trace()
 
 if __name__ == '__main__':
     # Use tomtom to generate comparison results

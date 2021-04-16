@@ -171,7 +171,7 @@ python TrainBasenjiBasset.py
 cd -
 
 cd ./basset/vConv/basenjibasset/
-python basenji_train.py
+python basenji_train.py params_basset.json ../../../data/data_basset/
 cd -
 
 cd ./basset/vConv/singlelayervConv/

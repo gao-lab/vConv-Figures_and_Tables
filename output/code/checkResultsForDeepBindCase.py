@@ -184,10 +184,8 @@ def draw_history(data_info,hist_dic,plt_type):
                 raise ValueError("cannot support plt_type: "+str(plt_type))
             tmp_data = tmp_dic[mode].tolist()[plt_type]
 
-            # if mode =="vCNN_IC":
-            #     pdb.set_trace()
+
             y = [x for it in tmp_data for x in it]
-            # pdb.set_trace()
             plt.plot(np.arange(len(y)),np.array(y),label=mode,color=color_list[idx]) #,label=mode,color=color_list[idx]
         plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
               fancybox=True, shadow=True, ncol=5)

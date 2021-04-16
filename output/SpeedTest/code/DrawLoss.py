@@ -5,11 +5,12 @@ import glob
 import matplotlib.pyplot as plt
 import pdb
 import os
+import numpy as np
 
 plt.switch_backend('agg')
 
 
-def DrawPic(datalist, path,dataname):
+def DrawPic(datalist, path,dataname,patience=50):
     """
 
     :param datalist:
@@ -25,6 +26,7 @@ def DrawPic(datalist, path,dataname):
         f = pd.read_csv(file)
         valloss = f["Value"]
         ax.plot(range(len(valloss)),valloss,label=modeltype)
+        ax.plot([len(valloss)-patience-1,len(valloss)-patience-1],[np.min(valloss)-0.2,np.max(valloss)+0.2],c='gray', linestyle='--')
     plt.title(dataname, fontsize='30')
     plt.ylabel("Validation loss", fontsize='25')
     plt.xlabel("Epoch", fontsize='25')
@@ -67,14 +69,15 @@ def main():
 
         dataname = OutputName[datapath.split("/")[-1]]
 
-
+        patience = 50
         filelist = glob.glob(datapath+"/*csv")
         if dataname=="Basset dataset":
             filelist.reverse()
+            patience = 12
 
         outputPath = datapath.replace("CSV","Png")
         mkdir("../Png")
-        DrawPic(filelist, outputPath,dataname)
+        DrawPic(filelist, outputPath,dataname,patience)
         print("draw: ", dataname)
 
 

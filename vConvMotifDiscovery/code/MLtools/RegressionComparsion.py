@@ -59,11 +59,8 @@ def VCNNFileIntoCisfinDer():
             motifSeqNumlist.append(motifSeqNum)
         motifSeqNumlist.sort()
 
-        try:
-            NumThreshold = motifSeqNumlist[-min(3, len(motifSeqNumlist))]
-        except:
-            import pdb
-            pdb.set_trace()
+        NumThreshold = motifSeqNumlist[-min(3, len(motifSeqNumlist))]
+
 
 
         for i, motif in enumerate(Motifs):

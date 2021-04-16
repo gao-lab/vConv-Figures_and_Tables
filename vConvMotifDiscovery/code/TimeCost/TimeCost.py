@@ -57,7 +57,7 @@ def Draw(Namelist, datalist, timecostlist, OutputPath,type):
 if __name__ == '__main__':
     import glob
 
-    path = "../../result/TimeCost/"
+    path = "../../output/TimeCost/"
     
     filelist = glob.glob(path+"/*.txt")
 
@@ -75,7 +75,6 @@ if __name__ == '__main__':
         Bplist.append(Bp/10**6)
         timecostlist.append(timecost)
 
-    
     OutputPath = path+"num.png"
     Draw(Namelist, Numlist, timecostlist, OutputPath, "Number of suqences")
     OutputPath = path+"bp.png"

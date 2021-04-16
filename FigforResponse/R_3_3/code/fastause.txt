@@ -1,0 +1,10 @@
+wgEncodeAwgTfbsSydhHelas3Brf1UniPk.fa
+wgEncodeAwgTfbsSydhGm12878Pol3UniPk.fa
+wgEncodeAwgTfbsSydhK562Brf1UniPk.fa
+wgEncodeAwgTfbsSydhHelas3Znf274UcdUniPk.fa
+wgEncodeAwgTfbsSydhHelas3Brf2UniPk.fa
+wgEncodeAwgTfbsSydhHelas3Zzz3UniPk.fa
+wgEncodeAwgTfbsSydhHelas3Bdp1UniPk.fa
+wgEncodeAwgTfbsSydhK562Bdp1UniPk.fa
+wgEncodeAwgTfbsSydhHepg2Znf274UcdUniPk.fa
+wgEncodeAwgTfbsSydhGm12878Znf274UniPk.fa

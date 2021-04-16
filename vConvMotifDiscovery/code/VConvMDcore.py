@@ -7,7 +7,7 @@ with warnings.catch_warnings():
 import os
 import numpy as np
 from build_models import *
-from  seq_to_matrix import *
+from seq_to_matrix import *
 import glob
 import pdb
 from keras import backend as K
@@ -42,7 +42,7 @@ def recover_ker(model, modeltype, KernelIndex=0):
         for Kid in range(KernelArray.shape[-1]):
             MaskTem = MaskArray[:, :, Kid].reshape(2, )
             leftInit = int(round(max(MaskTem[0] - 3, 0), 0))
-            rightInit = int(round(min(MaskTem[1], KernelArray.shape[0] - 1), 0))
+            rightInit = int(round(min(MaskTem[1]+ 3, KernelArray.shape[0] - 1), 0))
             if rightInit - leftInit >= 5:
                 kerTem = KernelArray[leftInit:rightInit, :, Kid]
                 CutKernel.append(kerTem)
@@ -177,18 +177,19 @@ def runVCNNC(filePath, OutputDir, HyperParaMeters, SaveData=False):
     DenseWeights = K.get_value(model.layers[4].kernel)
     meanValue = np.mean(np.abs(DenseWeights))
     std = np.std(np.abs(DenseWeights))
-    workWeightsIndex = np.where(np.abs(DenseWeights) > meanValue-std)[0]
+    workWeightsIndex = np.where(np.abs(DenseWeights) > max(meanValue-std,0))[0]
     kernels = recover_ker(model, "vCNN", workWeightsIndex)
     print("get kernels")
-    
+
     PwmWorklist = []
     for ker_id in range(len(kernels)):
         kernel = kernels[ker_id]
+
         KernelSeqs, KSconvValue, seqinfo = KernelSeqDive(kernel, GeneRateOneHotMatrixTest.seq_pos_matrix_out,)
         KernelSeqs = np.asarray(KernelSeqs)
         PwmWork = NormPwm(KernelSeqs, True)
         PwmWorklist.append(PwmWork)
-        
+
 
     
     pwm_save_dir = OutputDir + "/recover_PWM/"
@@ -201,69 +202,4 @@ def runVCNNC(filePath, OutputDir, HyperParaMeters, SaveData=False):
     gc.collect()
     np.savetxt(OutputDir + "/over.txt", np.zeros(1))
 
-
-
-
-
-
-def runCNNC(filePath, OutputDir, HyperParaMeters, SaveData=False):
-    """
-    Generate the final motif directly from the fasta file
-    :param filePath: directory of fasta files
-    :param OutputDir: The model where all output results are located
-    :param HyperParaMeters: All the hyperparameters of vConv
-    :param SaveData: Whether to store hdf5 data results
-    :return:
-    """
-    
-    if os.path.exists(OutputDir+"/over.txt"):
-        print("already trained")
-        return 0
-    
-    ########################train model#########################
-    GeneRateOneHotMatrixTest = GeneRateOneHotMatrix()
-    OutputDirHdf5 = OutputDir + "/Hdf5/"
-    GeneRateOneHotMatrixTest.runSimple(filePath, OutputDirHdf5, SaveData=SaveData)
-    
-    ############Select Kernel ####################
-    data_set = [[GeneRateOneHotMatrixTest.TrainX, GeneRateOneHotMatrixTest.TrainY],
-                [GeneRateOneHotMatrixTest.TestX, GeneRateOneHotMatrixTest.TestY]]
-    input_shape = GeneRateOneHotMatrixTest.TestX[0].shape
-    dataNum = GeneRateOneHotMatrixTest.TrainY.shape[0]
-    modelsave_output_prefix = OutputDir + "/ModleParaMeter/"
-    
-    auc, info, model = train_CNN(input_shape=input_shape, modelsave_output_prefix=modelsave_output_prefix,
-                                 data_set=data_set, number_of_kernel=HyperParaMeters["number_of_kernel"],
-                                 kernel_size=HyperParaMeters["KernelLen"], random_seed=HyperParaMeters["random_seed"],
-                                 batch_size=HyperParaMeters["batch_size"], epoch_scheme=HyperParaMeters["epoch_scheme"])
-    
-    ############Select Kernel ####################
-    DenseWeights = K.get_value(model.layers[3].kernel)
-    
-    meanValue = np.mean(np.abs(DenseWeights))
-    std = np.std(np.abs(DenseWeights))
-    workWeightsIndex = np.where(np.abs(DenseWeights) > meanValue-std)[0]
-    kernels = recover_ker(model, "CNN", workWeightsIndex)
-    print("get kernels")
-    
-    PwmWorklist = []
-    
-    for ker_id in range(len(kernels)):
-        kernel = kernels[ker_id]
-        KernelSeqs, KSconvValue,SeqInfo = KernelSeqDive(kernel, GeneRateOneHotMatrixTest.seq_pos_matrix_out)
-
-        KernelSeqs = np.asarray(KernelSeqs)
-        PwmWork = NormPwm(KernelSeqs, True)
-        PwmWorklist.append(PwmWork)
-
-
-    pwm_save_dir = OutputDir + "/recover_PWM/"
-    mkdir(pwm_save_dir)
-    for i in range(len(PwmWorklist)):
-        mkdir(pwm_save_dir + "/")
-        np.savetxt(pwm_save_dir + "/" + str(i) + ".txt", PwmWorklist[i])
-
-    del model, KernelSeqs, KSconvValue,SeqInfo
-    np.savetxt(OutputDir + "/over.txt", np.zeros(1))
-    gc.collect()
 

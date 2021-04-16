@@ -51,6 +51,8 @@ def read_and_decode(path):
     """
     filename = natsorted(glob.glob(path+"/test*tfr"))
     seqs_1hot = read_tfrecords(filename)
+    import pdb
+    pdb.set_trace()
     return seqs_1hot
 
 def loadDatabasenji(path):
@@ -224,7 +226,7 @@ def main(data_dir, out_dir):
     # initialize model
     seqnn_model = SeqNN(params_model)
 
-    seqnn_model.restore('../model/model_best.h5')
+    seqnn_model.restore('../../../output/result/BassetCompare/NineVCNN/model/model_best.h5')
 
     ## load data
 
@@ -282,9 +284,9 @@ def mainDY(data_dir, out_dir):
 
 
 if __name__ == '__main__':
-    data_dir= "../../basset/data_basset/"
-    Tfrpath = "../../basset/data_basset/tfrecords/"
-    out_dir = "../Output/basssetMethod/"
+    data_dir= "../../../data/data_basset/"
+    Tfrpath = "../../../data/data_basset/tfrecords/"
+    out_dir = "../../../output/result/BassetCompare/NineVCNN/KernelInfulence/PWM/"
     os.environ["CUDA_VISIBLE_DEVICES"] ="2"
 
     main(Tfrpath, out_dir)

@@ -20,7 +20,7 @@ import keras.backend as K
 import glob
 import tensorflow as tf
 from my_history import Histories
-
+from keras import regularizers
 
 def mkdir(path):
     """
@@ -55,10 +55,8 @@ def build_vCNN(model_template, number_of_kernel, max_kernel_length, k_pool=1,inp
         strides=1))
     model_template.add(keras.layers.pooling.MaxPooling1D(pool_length=10, stride=None, border_mode='valid'))
     model_template.add(keras.layers.GlobalMaxPooling1D())
-    model_template.add(keras.layers.core.Dense(output_dim=32))
-    model_template.add(Activation("relu"))
     model_template.add(keras.layers.core.Dropout(0.1))
-    model_template.add(keras.layers.core.Dense(units=1))
+    model_template.add(keras.layers.core.Dense(output_dim=1))
     model_template.add(keras.layers.Activation("sigmoid"))
     sgd = keras.optimizers.Adadelta(lr=1, rho=0.99, epsilon=1.0e-8, decay=0.0)
 

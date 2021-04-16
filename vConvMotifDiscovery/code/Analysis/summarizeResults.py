@@ -35,113 +35,6 @@ def mkdir(path):
     
 
 
-def AnalysisAUCMedian(filename, percentile=0):
-    """
-
-    :param filename:
-    :return:
-    """
-    outputPath = RootPath+"output/picTure/Simple/" + filename +"/"
-    narrowPeak = RootPath + "./ChIPSeqPeak/" + filename + ".narrowPeak"
-    Peakfile = pd.read_csv(narrowPeak, sep="\t", header=None)
-    FastaShape = Peakfile.shape[0]
-    f = h5py.File(RootPath+"output/AUChdf5/"+filename+".hdf5","r")
-    mkdir(outputPath)
-
-    BestCisFinder = 1000
-    BestCisFinderCluster = 1000
-    BestVCNNMD = 1000
-    BestDreme= 1000
-
-
-
-    KeyCisFinder = []
-    KeyCisFinderCluster = []
-    KeyVCNN = []
-    KeyDreme= []
-    CisFinderShape = 0
-    CisFinderClusterShape = 0
-    VCNNMDShape = 0
-    VCNNBShape = 0
-    CNNMDShape = 0
-    CNNBShape = 0
-    DremeShape = 0
-
-    BestCisFinder = 0
-    BestCisFinderCluster = 0
-    BestCNNMD = 0
-    BestVCNNB = 0
-    BestCNNB = 0
-    BestDreme = 0
-    percentile = percentile/100.0
-
-    for key in f.keys():
-        if key[:9] == "VCNNMDOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > percentile and MotifTem < BestVCNNMD:
-                BestVCNNMD = MotifTem
-                KeyVCNN = f[key].value
-            if MotifTem == BestVCNNMD:
-                VCNNMDShape = f[key].shape[0]*1.0/FastaShape
-        elif key[:8] == "CNNMDOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > BestCNNMD and MotifTem > percentile:
-                BestCNNMD = MotifTem
-            if MotifTem == BestCNNMD:
-                CNNMDShape = f[key].shape[0]*1.0/FastaShape
-
-        elif key[:8] == "VCNNBOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > BestVCNNB and MotifTem > percentile:
-                BestVCNNB = MotifTem
-            if MotifTem == BestVCNNB :
-                VCNNBShape = f[key].shape[0]*1.0/FastaShape
-
-        elif key[:7] == "CNNBOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > BestCNNB and MotifTem > percentile:
-                BestCNNB = MotifTem
-            if MotifTem == BestCNNB:
-                CNNBShape = f[key].shape[0] * 1.0 / FastaShape
-
-        elif key[:8] == "DremeOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > percentile and MotifTem < BestDreme:
-                BestDreme = MotifTem
-                KeyDreme = f[key].value
-            if MotifTem == BestDreme:
-                DremeShape = f[key].shape[0]*1.0/FastaShape
-
-        elif key[:19] == "CisFinderClusterOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > percentile and MotifTem < BestCisFinderCluster:
-                BestCisFinderCluster = MotifTem
-                KeyCisFinderCluster = f[key].value
-            if MotifTem == BestCisFinderCluster:
-                CisFinderClusterShape = f[key].shape[0]*1.0/FastaShape
-
-        else:
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > percentile and MotifTem < BestCisFinder:
-                BestCisFinder = MotifTem
-                KeyCisFinder = f[key].value
-            if MotifTem == BestCisFinder:
-                CisFinderShape = f[key].shape[0]*1.0/FastaShape
-
-    ax = plt.subplot()
-    ax.boxplot([KeyVCNN, KeyDreme, KeyCisFinder, KeyCisFinderCluster])
-    ax.set_xticklabels(['VCNNMD', 'Dreme','CisFinder','CisFinderCluster'])
-    plt.xlabel(filename)
-    plt.savefig(outputPath+"./"+ str(percentile)+"boxres.png")
-    plt.close()
-
-
-    print(CisFinderShape)
-    print(VCNNMDShape)
-    print(DremeShape)
-    print(CisFinderClusterShape)
-
-    return VCNNMDShape,VCNNBShape,CNNMDShape,CNNBShape,DremeShape,CisFinderShape,CisFinderClusterShape
 
 def AnalysisAccracy(filename, percentile=0):
     """
@@ -150,7 +43,7 @@ def AnalysisAccracy(filename, percentile=0):
     :return:
     """
     outputPath = RootPath+"output/picTure/Simple/" + filename +"/"
-    narrowPeak = RootPath + "/ChIPSeqPeak/" + filename + ".narrowPeak"
+    narrowPeak = RootPath + "/../data/ChIPSeqPeak/" + filename + ".narrowPeak"
     Peakfile = pd.read_csv(narrowPeak, sep="\t", header=None)
     FastaShape = Peakfile.shape[0]
     f = h5py.File(RootPath+"output/AUChdf5/"+filename+".hdf5","r")
@@ -158,54 +51,40 @@ def AnalysisAccracy(filename, percentile=0):
 
     BestCisFinder = 0
     BestCisFinderCluster = 0
-    BestVCNNMD = 0
-    BestCNNMD = 0
     BestVCNNB = 0
     BestCNNB = 0
     BestDreme= 0
     BestMemeChip = 0
 
     for key in f.keys():
-
-        if key[:9] == "VCNNMDOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > BestVCNNMD:
-                BestVCNNMD = MotifTem
-
-        elif key[:8] == "CNNMDOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
-            if MotifTem > BestCNNMD:
-                BestCNNMD = MotifTem
-
-        elif key[:8] == "VCNNBOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
+        if key[:8] == "VCNNBOut":
+            MotifTem = np.where(f[key].value[:,0]<100)[0].shape[0]/(FastaShape*1.0)
             if MotifTem > BestVCNNB:
                 BestVCNNB = MotifTem
-
         elif key[:7] == "CNNBOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
+            MotifTem = np.where(f[key].value[:,0]<100)[0].shape[0]/(FastaShape*1.0)
             if MotifTem > BestCNNB:
                 BestCNNB = MotifTem
 
         elif key[:8] == "DremeOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
+            MotifTem = np.where(f[key].value[:,0]<100)[0].shape[0]/(FastaShape*1.0)
             if MotifTem > BestDreme:
                 BestDreme = MotifTem
 
         elif key[:19] == "CisFinderClusterOut" and int(key[-3:])<3:
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
+            MotifTem = np.where(f[key].value[:,0]<100)[0].shape[0]/(FastaShape*1.0)
             if MotifTem > BestCisFinderCluster:
                 BestCisFinderCluster = MotifTem
         elif key[:12] == "CisFinderOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
+            MotifTem = np.where(f[key].value[:,0]<100)[0].shape[0]/(FastaShape*1.0)
             if MotifTem > BestCisFinder:
                 BestCisFinder = MotifTem
         elif key[:11] == "MemeChipOut":
-            MotifTem = np.where(f[key].value<100)[0].shape[0]/(FastaShape*1.0)
+            MotifTem = np.where(f[key].value[:,0]<100)[0].shape[0]/(FastaShape*1.0)
             if MotifTem > BestMemeChip:
                 BestMemeChip = MotifTem
-    BestCisFinderCluster = BestCisFinder
-    return BestVCNNMD, BestCNNMD, BestVCNNB, BestCNNB, BestDreme, BestCisFinder, BestCisFinderCluster,BestMemeChip
+    BestCisFinderCluster = max(BestCisFinder, BestCisFinderCluster)
+    return BestVCNNB, BestCNNB, BestDreme, BestCisFinder, BestCisFinderCluster,BestMemeChip
 
 
 
@@ -224,7 +103,7 @@ def AccuracyRatio(RootPath, AlldataPath,percentile=1):
         filename = file.split("/")[-1].replace(".narrowPeak","")
         print(file)
 
-        (BestVCNNMD, BestCNNMD, BestVCNNB, BestCNNB, BestDreme,
+        (BestVCNNB, BestCNNB, BestDreme,
          BestCisFinder, BestCisFinderCluster,BestMemeChip)= AnalysisAccracy(filename,percentile)
 
         BestVCNNBlist.append(BestVCNNB)
@@ -252,6 +131,7 @@ def AccuracyRatio(RootPath, AlldataPath,percentile=1):
 
     resultlist = [BestVCNNBArray -BestVCNNBArray, BestCNNBArray,
                 BestDremeArray, BestCisFinderClusterArray,BestMemeChipArray]
+    print(len(resultlist[0]))
     for i in range(2, len(namelist)):
         dictlist[namelist[i]] = resultlist[i]
         print(namelist[i]," ",resultlist[i][resultlist[i] >= 0].shape[0])
@@ -264,5 +144,5 @@ if __name__ == '__main__':
     
     RootPath = "../../"
     # os.environ["HDF5_USE_FILE_LOCKING"] = 'FALSE'
-    CTCFfiles = glob.glob(RootPath+"/ChIPSeqPeak/"+"*Ctcf*")
+    CTCFfiles = glob.glob(RootPath+"/../data/ChIPSeqPeak/"+"*Ctcf*")
     AccuracyRatio(RootPath, CTCFfiles)

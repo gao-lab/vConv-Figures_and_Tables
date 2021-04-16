@@ -1,0 +1,20 @@
+# GeneRate kernel influence value
+
+python KernelInfulence.py
+
+# cluster kernel
+
+python ClusterKernels.py
+
+# generate PWM motif
+
+python GeneRateMotif.py
+
+
+# Change Format
+
+python ChangeFormat.py
+
+# compare pwm with jasper motif
+
+python CompareRealMotif.py

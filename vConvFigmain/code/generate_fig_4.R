@@ -7,8 +7,8 @@ library("pdftools")
 
 dir.create("./vConvFigmain/result/Fig.4/", recursive=TRUE)
 
-pipeline.trimmed.ggplot <- image_read_pdf("./vConvFigmain/Pictures/pictures.pdf", pages=2) %>% image_trim %>% image_ggplot
-pipeline.trimmed.ggplot <- image_read("./vConvFigmain/F4A.image") %>% image_trim %>% image_ggplot
+# pipeline.trimmed.ggplot <- image_read_pdf("./vConvFigmain/Pictures/pictures.pdf", pages=2) %>% image_trim %>% image_ggplot
+pipeline.trimmed.ggplot <- image_read("./vConvFigmain/F4A.image/F4A.PNG") %>% image_trim %>% image_ggplot
 
 
 accuracy.increment.dt <- fread("./vConvFigmain/files.F4B/res.csv") %>% setnames(1, "index") %>% {melt(data=., id.vars="index", variable.name="tool", value.name="accuracy.increment")} %>% {.[, tool.to.plot:=factor(tool, levels=c("CisFinder", "DREME", "MEME-ChIP"))]}
@@ -26,3 +26,4 @@ timecost.dt <- list(
 timecost.ggplot <- ggline(data=timecost.dt, x="bp.count.per.M", y="timecost.hours", color="tool", palette="npg", numeric.x.axis=TRUE) + labs(x="Millions of base pairs in the test dataset", y="Hours", color="") + scale_x_continuous(breaks=seq(0, 17.5, 2.5))  + theme_pubr(legend=c(0.25, 0.75)) + theme(legend.title=element_blank(), legend.box.background=element_rect(colour = "black")) + scale_color_manual(values=c("#395486", "#009F86", "#2FB9D3", "#EF4E3C"))
 
 ggarrange(plotlist=list(pipeline.trimmed.ggplot, ggarrange(plotlist=list(accuracy.increment.ggplot, timecost.ggplot), nrow=1, labels=c("B", "C"), widths=c(0.5, 0.5))), ncol=1, labels=c("A", ""), heights=c(0.5, 0.5)) %>% {ggsave(filename="./vConvFigmain/result/Fig.4/Fig.4.pdf", plot=., device="pdf", width=20, height=20, units="cm")}
+ggarrange(plotlist=list(pipeline.trimmed.ggplot, ggarrange(plotlist=list(accuracy.increment.ggplot, timecost.ggplot), nrow=1, labels=c("B", "C"), widths=c(0.5, 0.5))), ncol=1, labels=c("A", ""), heights=c(0.5, 0.5)) %>% {ggsave(filename="./vConvFigmain/result/Fig.4/Fig.4.png", plot=., device="png", width=20, height=20, units="cm")}

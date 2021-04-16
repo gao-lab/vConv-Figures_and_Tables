@@ -59,8 +59,7 @@ def Calculate(pwm):
     stdV = tmp.std()
     meanV = tmp.mean()
     num = tmp[tmp<meanV-2*stdV].shape[0]
-    if num==0:
-        pdb.set_trace()
+
     print(num)
     return num
 

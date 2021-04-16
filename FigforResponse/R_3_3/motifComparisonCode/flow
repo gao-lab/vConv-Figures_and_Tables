@@ -1,0 +1,17 @@
+# step1
+python convertIntoCisfinderFormat.py
+
+
+# step2
+
+python splitIntoIndividualMotifFiles.py
+
+
+# step3
+python scanSequencesWithCisFinder.py
+
+# step4
+python mergePeaks.py
+
+# step5
+python computeAccuracy.py
