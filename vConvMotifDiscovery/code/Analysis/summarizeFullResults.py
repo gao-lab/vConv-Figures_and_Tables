@@ -41,19 +41,43 @@ def ComputeMetricsForASingleDataset(filename):
     :return:
     """
     outputPath = RootPath+"output/picTure/Simple/" + filename +"/"
-    narrowPeak = RootPath + "/ChIPSeqPeak/" + filename + ".narrowPeak"
+    narrowPeak = RootPath + "/../data/ChIPSeqPeak/" + filename + ".narrowPeak"
     Peakfile = pd.read_csv(narrowPeak, sep="\t", header=None)
     FastaShape = Peakfile.shape[0]
     f = h5py.File(RootPath+"output/AUChdf5/"+filename+".hdf5","r")
 
+    all_dist_values_dict={}
+    all_score_values_dict={}
     all_rows_list = []
     for key in f.keys():
-        temp_values = f[key].value
-        for threshold in range(10, 205, 5):
-            TP = np.where(temp_values<threshold)[0].shape[0]
-            FP = temp_values.shape[0] - TP
+        temp_value_matrix = f[key].value
+        temp_dist_values = temp_value_matrix[:, 0]
+        temp_score_values = temp_value_matrix[:, 1]
+        ## if (temp_score_values.min() == temp_score_values.max()):
+        ##    print("Skip dataset " + filename + " X tool-motif " + key +  " because all fragment scores are the same in this combination")
+        ##    continue
+        all_dist_values_dict[key] = temp_dist_values
+        all_score_values_dict[key] = temp_score_values
+    f.close()
+        
+    all_score_values_across_all_keys=np.concatenate([all_score_values_dict[key] for key in all_score_values_dict.keys()])
+
+    temp_score_value_max = all_score_values_across_all_keys.max()
+    temp_score_value_min = all_score_values_across_all_keys.min()
+    thresholds_vector = np.arange(temp_score_value_min, temp_score_value_max, (temp_score_value_max - temp_score_value_min)/100)
+        
+    for key in all_score_values_dict.keys():
+        temp_dist_values = all_dist_values_dict[key]
+        temp_score_values = all_score_values_dict[key]
+        for threshold in thresholds_vector:
+            temp_dist_values_of_valid_hits = temp_dist_values[(temp_score_values > threshold)]
+            TP = np.where(temp_dist_values_of_valid_hits<=100)[0].shape[0]
+            FP = temp_dist_values_of_valid_hits.shape[0] - TP
             FN = FastaShape - TP
             TN = FastaShape * 2 - FP
+            if (TP + FP == 0):
+                ## print("Stop testing thresholds for dataset " + filename + " X tool-motif " + key + " at threshold " + str(threshold) )
+                break
             total = TP + FP + FN + TN            
             precision = TP / (TP + FP)
             recall = TP / (TP + FN)
@@ -79,7 +103,7 @@ def ComputeMetricsForASingleDataset(filename):
                 "kappa":kappa}
             all_rows_list.append(temp_row)
             
-    f.close()    
+
     
     return pd.DataFrame(all_rows_list)
 
@@ -108,7 +132,7 @@ if __name__ == '__main__':
     
     RootPath = "../../"
     # os.environ["HDF5_USE_FILE_LOCKING"] = 'FALSE'
-    CTCFfiles = glob.glob(RootPath+"/ChIPSeqPeak/"+"*Ctcf*")
+    CTCFfiles = glob.glob(RootPath+"/../data/ChIPSeqPeak/"+"*Ctcf*")
     all_metrics_df = ComputeMetricsForAllDatasets(RootPath, CTCFfiles)
     mkdir("../../output/res/")
     all_metrics_df.to_csv("../../output/res/all_metrics.csv.gz", compression="gzip")
