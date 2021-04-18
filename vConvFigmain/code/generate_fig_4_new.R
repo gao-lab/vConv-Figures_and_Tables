@@ -8,8 +8,8 @@ library("foreach")
 
 dir.create("./vConvFigmain/result/Fig.4/", recursive=TRUE)
 
-pipeline.trimmed.ggplot <- image_read_pdf("./vConvFigmain/Pictures/pictures.pdf", pages=2) %>% image_trim %>% image_ggplot
-## pipeline.trimmed.ggplot <- image_read("./vConvFigmain/F4A.image") %>% image_trim %>% image_ggplot
+## pipeline.trimmed.ggplot <- image_read_pdf("./vConvFigmain/Pictures/pictures.pdf", pages=2) %>% image_trim %>% image_ggplot
+pipeline.trimmed.ggplot <- image_read("./vConvFigmain/F4A.image/F4A.png") %>% image_trim %>% image_ggplot
 
 all.metrics.dt <- fread("./vConvMotifDiscovery/output/res/all_metrics.csv.gz")
 
@@ -74,6 +74,19 @@ metrics.at.exemplary.threshold.ggplot <- all.best.metrics.with.exemplary.thresho
          scale_fill_manual(values=c("#395486", "#009F86", "#2FB9D3"))
     }
 
+
+## plot the precision metric only with the decent threshold
+precisions.at.exemplary.threshold.ggplot <- all.best.metrics.with.exemplary.threshold.with.inc.dt %>%
+    {ggplot(.[tool != 'VCNNB' ][metric.name=='precision'], aes(x=tool.description, y=metric.value.inc.by.vConv, fill=tool.description)) +
+         geom_boxplot() +
+         geom_hline(yintercept=0, linetype="dashed") + 
+         theme_pubr() +
+         labs(x="", y="Improvement of precision by\nvConv-based motif discovery", fill="") +
+         theme(axis.text.x=element_blank()) +
+         scale_fill_manual(values=c("#395486", "#009F86", "#2FB9D3"))
+    }
+
+
 ## define coord_radar (see https://stackoverflow.com/questions/37118721/radar-chart-spider-diagram-with-ggplot2)
 
 coord_radar <- function (theta = "x", start = 0, direction = 1) 
@@ -127,11 +140,18 @@ timecost.dt <- list(
 timecost.ggplot <- ggline(data=timecost.dt, x="bp.count.per.M", y="timecost.hours", color="tool", palette="npg", numeric.x.axis=TRUE) + labs(x="Millions of base pairs in the test dataset", y="Hours spent", color="") + scale_x_continuous(breaks=seq(0, 17.5, 2.5))  + theme_pubr(legend=c(0.25, 0.75)) + theme(legend.title=element_blank(), legend.box.background=element_rect(colour = "black")) + scale_color_manual(values=c("#395486", "#009F86", "#2FB9D3", "#EF4E3C"))
 
 
+## Fig. 4
+ggarrange(plotlist=list(
+              pipeline.trimmed.ggplot,
+              ggarrange(plotlist=list(precisions.at.exemplary.threshold.ggplot, timecost.ggplot), nrow=1, labels=c("B", "C"))
+          ), ncol=1, heights=c(0.3, 0.4, 0.3), labels=c("A", "")) %>%
+    {foreach(temp.suffix=c("pdf", "png")) %do% ggsave(filename=paste(sep="", "./vConvFigmain/result/Fig.4/Fig.4.new.", temp.suffix), plot=., device=temp.suffix, width=20, height=20, units="cm")}
 
-
+## Fig. 4 supp1
 ggarrange(plotlist=list(
               metrics.at.exemplary.threshold.ggplot,
               radar.ggplot,
-              ggarrange(plotlist=list(AUC.ggplot, timecost.ggplot), nrow=1, labels=c("C", "D"))
+              AUC.ggplot
           ), ncol=1, heights=c(0.3, 0.4, 0.3), labels=c("A", "B", "")) %>%
-    {ggsave(filename="./vConvFigmain/result/Fig.4/Fig.4.new.pdf", plot=., device="pdf", width=21, height=26, units="cm")}
+    {foreach(temp.suffix=c("pdf", "png")) %do% ggsave(filename=paste(sep="", "./vConvFigmain/result/Fig.4/Fig.4.new.supp1.", temp.suffix), plot=., device=temp.suffix, width=21, height=26, units="cm")}
+
