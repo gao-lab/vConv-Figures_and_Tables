@@ -64,7 +64,7 @@ def ComputeMetricsForASingleDataset(filename):
 
     temp_score_value_max = all_score_values_across_all_keys.max()
     temp_score_value_min = all_score_values_across_all_keys.min()
-    thresholds_vector = np.arange(temp_score_value_min, temp_score_value_max, (temp_score_value_max - temp_score_value_min)/100)
+    thresholds_vector = np.concatenate([[0], np.arange(temp_score_value_min, temp_score_value_max, (temp_score_value_max - temp_score_value_min)/100)])
         
     for key in all_score_values_dict.keys():
         temp_dist_values = all_dist_values_dict[key]
