@@ -119,8 +119,16 @@ def AccuracyRatio(RootPath, AlldataPath,percentile=1):
                   BestCisFinderClusterlist,BestMemeChiplist]
     for i in range(len(namelist)):
         dictlist[namelist[i]] = resultlist[i]
-    Pddict = pd.DataFrame(dictlist)
+    Pddictori = pd.DataFrame(dictlist)
 
+    # resulttem = []
+    # for i in range(len(namelist)):
+    #     resulttem.append(list(Pddictori[namelist[i]]))
+    #
+    # BestVCNNBlist, BestCNNBlist, BestDremelist,BestCisFinderClusterlist, BestMemeChiplist = resulttem
+
+    import pdb
+    pdb.set_trace()
     BestVCNNBArray = np.asarray(BestVCNNBlist)
     BestCNNBArray = BestVCNNBArray - np.asarray(BestCNNBlist)
     BestDremeArray = BestVCNNBArray - np.asarray(BestDremelist)
@@ -136,8 +144,11 @@ def AccuracyRatio(RootPath, AlldataPath,percentile=1):
         dictlist[namelist[i]] = resultlist[i]
         print(namelist[i]," ",resultlist[i][resultlist[i] >= 0].shape[0])
     Pddict = pd.DataFrame(dictlist)
-    mkdir("../../output/res/")
+    # mkdir("../../output/res/")
+    Pddict.to_csv("../../output/res/res2021.csv")
+
     Pddict.to_csv("../../output/res/res.csv")
+    Pddictori.to_csv("../../output/res/ori.csv")
 
 
 if __name__ == '__main__':

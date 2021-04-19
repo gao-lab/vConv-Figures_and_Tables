@@ -9,8 +9,8 @@ dir.create("./vConvFigmain/result/Fig.2/", recursive=TRUE)
 auroc.dt <- foreach(temp.dataset=c("2", "4", "6", "8", "TwoDif1", "TwoDif2", "TwoDif3")) %do% {
     data.table(
         dataset=temp.dataset,
-        vConv.AUROC=paste(sep="", "./vConvFigmain/files.F2/JasperMotif/", temp.dataset, "_vCNN_auc.txt") %>% {scan(file=., what=double())},
-        CNN.AUROC=paste(sep="", "./vConvFigmain/files.F2/JasperMotif/", temp.dataset, "_CNN_auc.txt") %>% {scan(file=., what=double())}
+        vConv.AUROC=paste(sep="", "./vConvFigmain/files.F2/JasperMotif/", temp.dataset, "_vCNNbestRandom_auc.txt") %>% {scan(file=., what=double())},
+        CNN.AUROC=paste(sep="", "./vConvFigmain/files.F2/JasperMotif/", temp.dataset, "_CNNbestRandom_auc.txt") %>% {scan(file=., what=double())}
     ) %>% {.[, AUROC.increment:=vConv.AUROC-CNN.AUROC]} %>% {.[, index:=.I]} } %>%
     rbindlist %>%
     {.[, dataset.to.plot:=c("2"="2 motifs", "4"="4 motifs", "6"="6 motifs", "8"="8 motifs", "TwoDif1"="TwoDiffMotif1", "TwoDif2"="TwoDiffMotif2", "TwoDif3"="TwoDiffMotif3")[dataset]]}
@@ -23,4 +23,3 @@ F2B.ggplot <- ggbarplot(data=auroc.dt, x="dataset.to.plot", y="AUROC.increment",
 
 ggarrange(plotlist=list(F2A.ggplot, F2B.ggplot), ncol=1, labels=c("A", "B"), heights=c(0.45, 0.55)) %>% {ggsave(filename="./vConvFigmain/result/Fig.2/Fig.2.png", plot=., device="png", width=20, height=18, units="cm")}
 
-F2B.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.2/Additional.Fig.5.pdf", plot=., device="pdf", width=14, height=12, units="cm")}
