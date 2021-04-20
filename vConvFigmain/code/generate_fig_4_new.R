@@ -52,7 +52,8 @@ AUC.ggplot <- all.best.metrics.AUROC.with.inc.dt %>%
 ## pick the best model per 'filename x tool' across different thresholds
 all.best.metrics.with.exemplary.threshold.with.inc.dt <- all.best.metrics.dt %>%
     ## pick a decent threshold (for now we use the one with the best accuracy per "filename x tool")
-    {.[, .SD[which.max(accuracy)], list(filename, tool)]} %>%
+    ## {.[, .SD[which.max(accuracy)], list(filename, tool)]} %>%
+    {.[, .SD[threshold==0], list(filename, tool)]} %>%
     {melt(
          data=.,
          id.vars=c("filename", "tool", "tool.description", "key"),
@@ -76,12 +77,12 @@ metrics.at.exemplary.threshold.ggplot <- all.best.metrics.with.exemplary.thresho
 
 
 ## plot the precision metric only with the decent threshold
-precisions.at.exemplary.threshold.ggplot <- all.best.metrics.with.exemplary.threshold.with.inc.dt %>%
-    {ggplot(.[tool != 'VCNNB' ][metric.name=='precision'], aes(x=tool.description, y=metric.value.inc.by.vConv, fill=tool.description)) +
+recalls.at.exemplary.threshold.ggplot <- all.best.metrics.with.exemplary.threshold.with.inc.dt %>%
+    {ggplot(.[tool != 'VCNNB' ][metric.name=='recall'], aes(x=tool.description, y=metric.value.inc.by.vConv, fill=tool.description)) +
          geom_boxplot() +
          geom_hline(yintercept=0, linetype="dashed") + 
          theme_pubr() +
-         labs(x="", y="Improvement of precision by\nvConv-based motif discovery", fill="") +
+         labs(x="", y="Improvement of recall by\nvConv-based motif discovery", fill="") +
          theme(axis.text.x=element_blank()) +
          scale_fill_manual(values=c("#395486", "#009F86", "#2FB9D3"))
     }
@@ -143,7 +144,7 @@ timecost.ggplot <- ggline(data=timecost.dt, x="bp.count.per.M", y="timecost.hour
 ## Fig. 4
 ggarrange(plotlist=list(
               pipeline.trimmed.ggplot,
-              ggarrange(plotlist=list(precisions.at.exemplary.threshold.ggplot, timecost.ggplot), nrow=1, labels=c("B", "C"))
+              ggarrange(plotlist=list(recalls.at.exemplary.threshold.ggplot, timecost.ggplot), nrow=1, labels=c("B", "C"))
           ), ncol=1, heights=c(0.3, 0.4, 0.3), labels=c("A", "")) %>%
     {foreach(temp.suffix=c("pdf", "png")) %do% ggsave(filename=paste(sep="", "./vConvFigmain/result/Fig.4/Fig.4.new.", temp.suffix), plot=., device=temp.suffix, width=20, height=20, units="cm")}
 
