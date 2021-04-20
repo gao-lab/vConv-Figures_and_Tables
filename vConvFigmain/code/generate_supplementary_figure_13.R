@@ -5,9 +5,9 @@ library("readxl")
 library("foreach")
 library("ggseqlogo")
 
-dir.create("./vConvFigmain/result/Supplementary.Fig.10/", recursive=TRUE)
+dir.create("./vConvFigmain/result/Supplementary.Fig.13/", recursive=TRUE)
 
-pwm.list.collection <- read.csv("./vConvFigmain/files.SF10/tables.csv", na="NA") %>%
+pwm.list.collection <- read.csv("./vConvFigmain/files.SF13/tables.csv", na="NA") %>%
     data.table %>%
     {melt(data=., id.vars="motif", measure.vars=c("cnn.kernel", "ground.truth", "vconv.kernel"), variable.name="type", value.name="filename")} %>%
     {
@@ -31,4 +31,4 @@ pwm.list.collection %>%
          ggplot() + geom_logo(.[["cnn.kernel"]], method="custom", seq_type="dna") + theme_logo() + facet_grid(seq_group~"Canonical convolution-based", switch="y") + theme(strip.text.y=element_blank(), axis.ticks=element_line(), axis.line=element_line()) + geom_text(data=data.table(seq_group="MA0234.1", x=8, y=1, label="Not found"), mapping=aes(x=x, y=y, label=label), size=10) + lims(y=c(0, 2))
      )} %>%
     {ggarrange(plotlist=., ncol=3)} %>%
-    {ggsave(filename="./vConvFigmain/result/Supplementary.Fig.10/Supplementary.Fig.10.png", plot=., device="png", width=24, height=16, units="cm")}
+    {ggsave(filename="./vConvFigmain/result/Supplementary.Fig.13/Supplementary.Fig.13.png", plot=., device="png", width=24, height=16, units="cm")}

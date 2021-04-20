@@ -204,6 +204,57 @@ def mkdir(path):
     else:
         return False
 
+def draw_history(data_info,hist_dic,plt_type):
+
+    def SimuTitle(data_info):
+
+        dataNamedict = {
+            "2 ":"2 motifs",
+            "4 ":"4 motifs",
+            "6 ":"6 motifs",
+            "8 ":"8 motifs",
+            "TwoDif1 ":"TwoDiffMotif1",
+            "TwoDif2 ":"TwoDiffMotif2",
+            "TwoDif3 ":"TwoDiffMotif3",
+        }
+
+        return dataNamedict[data_info]
+
+    save_root = "../../output/ModelAUC/JasperMotif/history/"
+    mkdir(save_root)
+    color_list = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+    tmp_dic = hist_dic[data_info]
+
+    mode_lst = ["vCNN","CNN"]
+    print("ploting: "+str(plt_type)+" history:  "+data_info)
+
+    plt.clf()
+    data_info = " ".join(data_info.split("/"))
+
+    title = SimuTitle(data_info)
+    # plt.title(str(plt_type)+" history:  "+data_info)
+    plt.title(str(plt_type)+" history:  "+title)
+
+    plt.xlabel("Epoch")
+
+    plt.ylabel(str(plt_type))
+
+    for idx,mode in enumerate(mode_lst):
+        if not (plt_type == "auc" or plt_type == "loss"):
+            raise ValueError("cannot support plt_type: "+str(plt_type))
+        if mode=="vCNN":
+            label = "vConv-based network"
+        else:
+            label = mode + "-based network"
+
+        tmp_data = tmp_dic[mode].tolist()[plt_type]
+        y = [x for it in tmp_data for x in it]
+        plt.plot(np.arange(len(y)),np.array(y),label=label,color=color_list[idx]) #,label=mode,color=color_list[idx]
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
+          fancybox=True, shadow=True, ncol=5)
+    plt.savefig(save_root+str(plt_type)+"-"+data_info+".eps", format="eps")
+    plt.savefig(save_root+str(plt_type)+"-"+data_info+".png")
+
 
 #####################################################
 
@@ -229,12 +280,7 @@ def DrawBox(dataName, path, outputName):
     for i in range(len(dataName)):
         dataInfo = dataName[i]
         outputtem = outputName[i]
-        temfilelisttem = glob.glob(path +dataInfo+"*.txt")
-        temfilelist = []
-        for i in range(len(temfilelisttem)):
-            if "bestRandom" not in temfilelisttem[i]:
-                temfilelist.append(temfilelisttem[i])
-
+        temfilelist = glob.glob(path +dataInfo+"*.txt")
         data = []
         labels = []
         dictlist = {}
@@ -246,7 +292,6 @@ def DrawBox(dataName, path, outputName):
             else:
                 dictlist["convolution-based "+"\n"+"network"] = list(aa)
             data.append(aa)
-            print(aa.shape)
         Pddict = pd.DataFrame(dictlist)
 
         pvalue = stats.levene(Pddict["convolution-based "+"\n"+"network"], Pddict["vConv-based \n network"])[1]
@@ -257,8 +302,67 @@ def DrawBox(dataName, path, outputName):
     StdComDF.index = ["p-value", "Std. for convolution-based networks", "Std. for vConv basednetworks"]
     StdComDF.to_csv("../../vConvFigmain/supptable23/SuppTable2.csv")
     return pvaluedict
-        
-def DrawErrorBar(dataName, data, path,OutputName):
+
+def DrawBestRandomSeedsBox(AUCCom, dataName, path, outputName):
+    """
+    :param dataName:
+    :param path:
+    :return:
+    """
+    plt.clf()
+
+    pvaluedict = {}
+    StdComDict = {}
+    model_lst = ["vCNN", "CNN"]
+
+    for i in range(len(dataName)):
+        dataInfo = dataName[i]
+        outputtem = outputName[i]
+        data = []
+        dictlist = {}
+        for model in model_lst:
+            aa = AUCCom[model][dataInfo]
+            if model=="vCNN":
+                dictlist["vConv-based \n network"] = list(aa)
+            else:
+                dictlist["convolution-based "+"\n"+"network"] = list(aa)
+            data.append(aa)
+        Pddict = pd.DataFrame(dictlist)
+        pvalue = stats.levene(Pddict["convolution-based "+"\n"+"network"], Pddict["vConv-based \n network"])[1]
+        StdComDict[outputtem] = [round(pvalue, 3), np.std(Pddict["convolution-based "+"\n"+"network"]),
+                                np.std(Pddict["vConv-based \n network"])]
+        print(StdComDict)
+        rcParams.update({'figure.autolayout': True})
+        fig, ax = plt.subplots(figsize=(6,5))
+        sns.boxplot(ax=ax,data=Pddict)
+        ax.set_xticklabels(
+            ax.get_xticklabels(),
+            rotation=0,
+            # horizontalalignment='right',
+            # fontweight='light',
+            fontsize=20
+        )
+        ax.tick_params(axis='both', which='major', labelsize=20)
+        # if pvalue > float("1e-18"):
+        #     plt.title("P-value: " + format(pvalue, ".2e"), fontsize=20)
+        # else:
+        #     plt.title("P-value < 1e-18", fontsize=20)
+        plt.gcf().subplots_adjust(left=0.3,bottom=0.3)
+        plt.xlabel(outputtem+" Data",fontsize=25)
+        plt.ylabel("AUROC",fontsize=25)
+        # plt.tight_layout()
+        plt.savefig(path+outputtem+".eps", format="eps")
+        plt.savefig(path+outputtem+".png")
+        plt.close('all')
+
+
+    # StdComDF = pd.DataFrame(StdComDict)
+    # StdComDF.index = ["p-value", "Std. for convolution-based networks", "Std. for vConv basednetworks"]
+    # StdComDF.to_csv("../../vConvFigmain/supptable23/SuppTable2.csv")
+    return pvaluedict
+
+
+def DrawErrorBar(dataName, data, path,OutputName, pvaluedict):
     """
     
     :param data:
@@ -338,13 +442,14 @@ def Forscatter(dataName, data, path, OutputName):
 
 
 
+
 if __name__ == '__main__':
     # Analyze the auc of each hyperparameter of the model
     # and check the robustness of the model to hyperparameters
-    SimulationDataRoot = "../../data/JasperMotif/HDF5/"
-    SimulationResultRoot = "../../output/result/JasperMotif/"
+    SimulationDataRoot = "../../../data/JasperMotif/HDF5/"
+    SimulationResultRoot = "../../../output/result/JasperMotif/"
 
-    # result = iter_real_path(best_model_report, data_root=SimulationDataRoot, result_root=SimulationResultRoot)
+    result = iter_real_path(best_model_report, data_root=SimulationDataRoot, result_root=SimulationResultRoot)
 
     #################Analyze the model's optimal AUC and save it################
     model_lst = ["vCNN", "CNN"]
@@ -362,27 +467,7 @@ if __name__ == '__main__':
             data_info = dataInfo.split("/")[-1]
             aucouttem, DatatypeAUC, BestInfo,BestRandomSeeds = gen_auc_report(item, data_info, SimulationResultRoot,
                                                                               aucouttem, DatatypeAUC, BestInfo,BestRandomSeeds)
-        Key = []
-        Auc = []
-        for key in DatatypeAUC.keys():
-            Key.append(key)
-            Auc.append(DatatypeAUC[key])
-            f = open(SimulationResultRoot + key + "/" + item + "/best_info.txt", "wb")
-            f.writelines(BestInfo[key])
-            f.writelines("\n")
-            f.writelines("Best AUC: " + str(DatatypeAUC[key]))
-            f.close()
-        Df = pd.DataFrame(Auc, index=Key)
-        mkdir("../../output/ModelAUC/JasperMotif/")
-        Df.to_csv("../../output/ModelAUC/JasperMotif/"+ item + "AUC.csv")
-        for key in aucouttem.keys():
-            print(key)
-            np.savetxt("../../output/ModelAUC/JasperMotif/" + key +"_" + item + "_auc.txt", np.asarray(aucouttem[key]))
-        for key in aucouttem.keys():
-            print(key)
-            np.savetxt("../../output/ModelAUC/JasperMotif/" + key + "_" + item + "bestRandom_auc.txt", np.asarray(BestRandomSeeds[key]))
 
-        AUCDifference[item] = aucouttem
         AUCCom[item] = BestRandomSeeds
 
     dataName = [
@@ -404,10 +489,12 @@ if __name__ == '__main__':
         "TwoDiffMotif2",
         "TwoDiffMotif3",
     ]
-    mkdir("../../output/ModelAUC/JasperMotif/pic/")
-    pvaluedict = DrawBox(dataName, "../../output/ModelAUC/JasperMotif/",OutputName)
+    mkdir("../result/")
+    # pvaluedict = DrawBox(dataName, "../../output/ModelAUC/JasperMotif/",OutputName)
 
-    DrawErrorBar(dataName, AUCDifference, "../../output/ModelAUC/JasperMotif/pic/",OutputName)
+    DrawBestRandomSeedsBox(AUCCom, dataName, "../result/",OutputName)
+
+    # DrawErrorBar(dataName, AUCDifference, "../../output/ModelAUC/JasperMotif/pic/",OutputName,pvaluedict)
 
     # Forscatter(dataName, AUCDifference, "../../output/ModelAUC/JasperMotif/pic/",OutputName)
     # Forscatter(dataName, AUCCom, "../../output/ModelAUC/JasperMotif/pic/Random",OutputName)
