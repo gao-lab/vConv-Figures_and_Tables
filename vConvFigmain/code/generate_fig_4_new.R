@@ -153,6 +153,6 @@ ggarrange(plotlist=list(
               metrics.at.exemplary.threshold.ggplot,
               radar.ggplot,
               AUC.ggplot
-          ), ncol=1, heights=c(0.3, 0.4, 0.3), labels=c("A", "B", "")) %>%
+          ), ncol=1, heights=c(0.3, 0.4, 0.3), labels=c("A", "B", "C")) %>%
     {foreach(temp.suffix=c("pdf", "png")) %do% ggsave(filename=paste(sep="", "./vConvFigmain/result/Fig.4/Fig.4.new.supp1.", temp.suffix), plot=., device=temp.suffix, width=21, height=26, units="cm")}
 
