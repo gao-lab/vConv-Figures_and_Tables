@@ -29,3 +29,19 @@ if __name__ == '__main__':
 
 
 
+
+    #####
+    fileNamelist = [
+        "wgEncodeAwgTfbsSydhHelas3Brf2UniPk", "wgEncodeAwgTfbsSydhK562Bdp1UniPk", "wgEncodeAwgTfbsSydhHelas3Zzz3UniPk",
+        "wgEncodeAwgTfbsSydhGm12878Pol3UniPk", "wgEncodeAwgTfbsSydhHelas3Bdp1UniPk",
+        "wgEncodeAwgTfbsSydhHelas3Brf1UniPk", "wgEncodeAwgTfbsSydhK562Brf1UniPk"
+    ]
+    for filename in fileNamelist:
+
+        path = glob.glob("../../../data/chip-seqFa/" + "*"+filename+"*")[0]
+
+        fsatasize = 0
+        for record in Bio.SeqIO.parse(path, "fasta"):
+            fsatasize =fsatasize + len(str(record.seq))
+        print(filename)
+        print(fsatasize)

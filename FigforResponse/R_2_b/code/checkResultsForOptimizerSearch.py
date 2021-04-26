@@ -135,10 +135,10 @@ def main():
 
             path = resultpath+model+"/"+name+"/"
             if model =="vCNN":
-                name = "vConv-based model "+nameldict[name]
+                name = "vConv-based network optimized with "+nameldict[name]
                 AUCdict[name] = loadResult(path,model)
             else:
-                name = "CNN-based model " +nameldict[name]
+                name = "CNN-based network optimized with " +nameldict[name]
                 AUCdict[name] = loadResult(path,model)
     AUCdataFrame = pd.DataFrame(AUCdict)
 

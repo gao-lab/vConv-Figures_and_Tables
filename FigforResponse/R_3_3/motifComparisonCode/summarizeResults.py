@@ -74,11 +74,12 @@ def AccuracyRatio(AlldataPath):
         if not os.path.exists("../output/AUChdf5/"+filename+".hdf5"):
             continue
         BestvConv, Bestmfmd = AnalysisAccracy(filename)
-
+        print(BestvConv)
+        print(Bestmfmd)
         BestvConvlist.append(BestvConv)
         Bestmfmdlist.append(Bestmfmd)
     dictlist = {}
-    namelist = ['vConv-based model', 'Mfmd']
+    namelist = ['vConv-based model', 'MFMD']
 
     resultlist = [BestvConvlist, Bestmfmdlist]
     for i in range(len(namelist)):
@@ -88,7 +89,7 @@ def AccuracyRatio(AlldataPath):
     BestvConvArray = np.asarray(BestvConvlist)
     BestmfmdArray = BestvConvArray - np.asarray(Bestmfmdlist)
     dictlist = {}
-    namelist = ['vConv-based model', 'Mfmd']
+    namelist = ['vConv-based model', 'MFMD']
 
     resultlist = [BestvConvArray -BestvConvArray,BestmfmdArray]
     print(len(resultlist[0]))
@@ -113,7 +114,7 @@ def AccuracyRatio(AlldataPath):
         fontsize=15
     )
     # plt.ylabel("Improvement of AUC by \n vCNN-based motif discovery", fontsize=15)  # X轴标签
-    plt.title("Improvement of accuracy by \n vConv-based motif discovery", fontsize=15)  # X轴标签
+    plt.ylabel("Improvement of accuracy by \n vConv-based motif discovery", fontsize=15)  # X轴标签
     plt.tight_layout()
     plt.savefig(RootPath+"/output/Resboxres.png")
     plt.close()

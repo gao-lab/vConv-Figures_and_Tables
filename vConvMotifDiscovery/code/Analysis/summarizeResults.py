@@ -122,10 +122,12 @@ def AccuracyRatio(RootPath, AlldataPath,percentile=1):
     Pddictori = pd.DataFrame(dictlist)
 
     # resulttem = []
+    # Pddictoritest = pd.read_csv("../../output/res/all_metricOri.csv")
     # for i in range(len(namelist)):
+    #   resulttem.append(list(Pddictori[namelist[i]]))
     #     resulttem.append(list(Pddictori[namelist[i]]))
     #
-    # BestVCNNBlist, BestCNNBlist, BestDremelist,BestCisFinderClusterlist, BestMemeChiplist = resulttem
+    # BestVCNNBlist1, BestCNNBlist1, BestDremelist1,BestCisFinderClusterlist1, BestMemeChiplist1 = resulttem
 
     import pdb
     pdb.set_trace()

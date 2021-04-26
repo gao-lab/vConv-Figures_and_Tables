@@ -81,8 +81,28 @@ def main():
         print("draw: ", dataname)
 
 
+def PrintTimecost():
+
+    pathlist = glob.glob("../CSV/*")
+    for path in pathlist:
+
+        modelresult = glob.glob(path+"/*csv")
+
+        for model in modelresult:
+            modelname = model.split("/")[-1].split(".")[0]
+            f = pd.read_csv(model)
+            epoch = len(f['Wall time'])
+            time = (f['Wall time'][len(f['Wall time'])-1]-f["Wall time"][0])/epoch
+
+            print(modelname+" on "+path.split("/")[-1])
+            print("each epoch time cost",time)
+            print("epoch number", epoch)
+
+
+
 
 if __name__ == '__main__':
     main()
+    PrintTimecost()
 
 
