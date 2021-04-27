@@ -35,4 +35,15 @@ temp.ggplot <- ggscatter(data=auroc.dt, x="vConv.AUROC", y="CNN.AUROC", size=1, 
     geom_abline(slope=1, intercept=c(0, 0)) +
     geom_hline(aes(yintercept=CNN.AUROC.lower.outlier.threshold), color="#4DBBD5", linetype="dashed") + 
     geom_vline(aes(xintercept=vConv.AUROC.lower.outlier.threshold), color="#E64B35", linetype="dashed") + 
-    facet_wrap(~title, ncol=2) + lims(x=c(0.0, 1), y=c(0.0, 1)); temp.ggplot %>% {ggsave(filename="./vConvFigmain/result/Supplementary.Fig.5/Supplementary.Fig.5.new.png", plot=., device="png", width=14, height=20, units="cm")}
+    facet_wrap(~title, ncol=2) + lims(x=c(0.0, 1), y=c(0.0, 1)); temp.ggplot %>% {ggsave(filename="./vConvFigmain/result/Supplementary.Fig.5/Supplementary.Fig.5.new.png", plot=., device="png", width=12, height=23.5, units="cm")}
+
+
+temp.no.dashed.lines.ggplot <- ggscatter(data=auroc.dt, x="vConv.AUROC", y="CNN.AUROC", size=1, alpha=0.2, color="#53C1A5", palette="npg") +
+    labs(x="vConv-based network's AUROC", y="convolution-based\nnetwork's AUROC") +
+    geom_abline(slope=1, intercept=c(0, 0)) +
+    facet_wrap(~title, ncol=2) + lims(x=c(0.0, 1), y=c(0.0, 1)); temp.no.dashed.lines.ggplot %>% {ggsave(filename="./vConvFigmain/result/Supplementary.Fig.5/Supplementary.Fig.5.new.no.dashed.lines.png", plot=., device="png", width=12, height=23.5, units="cm")}
+
+temp.no.dashed.lines.0.4.to.1.0.ggplot <- ggscatter(data=auroc.dt, x="vConv.AUROC", y="CNN.AUROC", size=1, alpha=0.2, color="#53C1A5", palette="npg") +
+    labs(x="vConv-based network's AUROC", y="convolution-based\nnetwork's AUROC") +
+    geom_abline(slope=1, intercept=c(0, 0)) +
+    facet_wrap(~title, ncol=2) + lims(x=c(0.4, 1), y=c(0.4, 1)); temp.no.dashed.lines.0.4.to.1.0.ggplot %>% {ggsave(filename="./vConvFigmain/result/Supplementary.Fig.5/Supplementary.Fig.5.new.no.dashed.lines.0.4.to.1.0.png", plot=., device="png", width=12, height=23.5, units="cm")}
