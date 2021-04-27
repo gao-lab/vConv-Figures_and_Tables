@@ -119,7 +119,7 @@ radar.ggplot <- all.best.metrics.with.exemplary.threshold.with.inc.dt %>%
          geom_polygon(data=.[prob=="25%"], color="black", alpha=0.6) +
          geom_point(color="black") +
          coord_radar() +
-         facet_wrap(~tool.description, nrow=1) +
+         facet_wrap(~tool.description, nrow=2) +
          theme_pubr(base_size=10) +
          theme(panel.grid.major=element_line(color="grey")) +
          labs(x="", y="", fill="probability for quantile") +
@@ -144,15 +144,10 @@ timecost.ggplot <- ggline(data=timecost.dt, x="bp.count.per.M", y="timecost.hour
 ## Fig. 4
 ggarrange(plotlist=list(
               pipeline.trimmed.ggplot,
-              ggarrange(plotlist=list(recalls.at.exemplary.threshold.ggplot, timecost.ggplot), nrow=1, labels=c("B", "C"))
+              ggarrange(plotlist=list(AUC.ggplot, timecost.ggplot), nrow=1, labels=c("B", "C"))
           ), ncol=1, heights=c(0.3, 0.4, 0.3), labels=c("A", "")) %>%
     {foreach(temp.suffix=c("pdf", "png")) %do% ggsave(filename=paste(sep="", "./vConvFigmain/result/Fig.4/Fig.4.new.", temp.suffix), plot=., device=temp.suffix, width=20, height=20, units="cm")}
 
 ## Fig. 4 supp1
-ggarrange(plotlist=list(
-              metrics.at.exemplary.threshold.ggplot,
-              radar.ggplot,
-              AUC.ggplot
-          ), ncol=1, heights=c(0.3, 0.4, 0.3), labels=c("A", "B", "C")) %>%
-    {foreach(temp.suffix=c("pdf", "png")) %do% ggsave(filename=paste(sep="", "./vConvFigmain/result/Fig.4/Fig.4.new.supp1.", temp.suffix), plot=., device=temp.suffix, width=21, height=26, units="cm")}
+radar.ggplot %>% {foreach(temp.suffix=c("pdf", "png")) %do% ggsave(filename=paste(sep="", "./vConvFigmain/result/Fig.4/Fig.4.new.supp1.", temp.suffix), plot=., device=temp.suffix, width=21, height=26, units="cm")}
 
