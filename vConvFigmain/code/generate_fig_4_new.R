@@ -36,6 +36,15 @@ all.best.metrics.AUROC.with.inc.dt <- all.best.metrics.dt %>%
           variable.name="metric.name", value.name="metric.value")} %>%
     {.[, metric.value.inc.by.vConv:=.SD[tool=='VCNNB', metric.value] - metric.value, list(filename, metric.name)]}
 
+## print the number of datasets where vConv outperformed CNN
+
+### > all.best.metrics.AUROC.with.inc.dt[metric.name=='AUROC', .N, list(tool, metric.value.inc.by.vConv>0)] %>% dcast(tool~metric.value.inc.by.vConv, value.var="N")
+##         tool FALSE TRUE
+## 1: CisFinder     9   91
+## 2:     Dreme     5   95
+## 3:  MemeChip    13   87
+## 4:     VCNNB   100   NA
+
 ## plot AUROC and AUPRC
 AUC.ggplot <- all.best.metrics.AUROC.with.inc.dt %>%
     {ggplot(.[tool != 'VCNNB'], aes(x=tool, y=metric.value.inc.by.vConv, fill=tool.description)) +
