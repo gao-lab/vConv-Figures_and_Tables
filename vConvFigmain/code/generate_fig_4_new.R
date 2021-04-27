@@ -23,6 +23,30 @@ all.best.metrics.dt <- all.metrics.dt %>%
              "MemeChip"="MEME-ChIP"
          )[tool]]}
 
+## Plot ROC curves
+ROC.ggplots.list <- all.best.metrics.dt %>%
+    {.[, list(
+         specificity.augmented=c(specificity, 0),
+         recall.augmented=c(recall, 1)),
+       list(filename, tool, tool.description)]} %>%
+    {.[order(specificity.augmented)]} %>%
+    {foreach(temp.filename=.[, filename] %>% sort %>% unique) %do% {
+        temp.ggplot <- ggplot(.[filename == temp.filename], aes(x=1-specificity.augmented, y=recall.augmented)) +
+            geom_line() +
+            geom_point() +
+            facet_grid(~tool.description) +
+            labs(x="1 - specificity", y="recall") +
+            lims(x=c(0, 1), y=c(0, 1)) +
+            ggtitle(label=temp.filename) + 
+            theme_pubr()
+    }}
+
+pdf(file="./vConvFigmain/result/Fig.4/Fig.4.all.ROCs.pdf", width=12, height=4, onefile=TRUE)
+foreach(temp.ROC.ggplot=ROC.ggplots.list) %do% {
+    print(temp.ROC.ggplot)
+}
+dev.off()
+
 
 ## compute AUROC with  (1-speicificty, recall) ordered by "1-specificity" appended with (1-specificity=1, recall=1)
 all.best.metrics.AUROC.with.inc.dt <- all.best.metrics.dt %>%
