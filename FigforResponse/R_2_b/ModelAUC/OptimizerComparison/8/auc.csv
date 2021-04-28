@@ -1,4 +1,16 @@
-,CNN-based model Adadelta,CNN-based model Adam,CNN-based model RMSprop,vConv-based model Adadelta,vConv-based model Adam,vConv-based model RMSprop
+,"Convolution-based 
+ network optimized 
+ with Adadelta","Convolution-based 
+ network optimized 
+ with Adam","Convolution-based 
+ network optimized 
+ with RMSprop","vConv-based 
+ network optimized 
+ with Adadelta","vConv-based 
+ network optimized 
+ with Adam","vConv-based 
+ network optimized 
+ with RMSprop"
 0,0.5993288814320159,0.5523950266114068,0.5518839098212203,0.6993188813209036,0.7040967121856909,0.7116412404582273
 1,0.6069734108156757,0.5506727852531694,0.538972655251725,0.6891409904554495,0.6839187102078912,0.6951410571228569
 2,0.5925065834064823,0.5152057245080501,0.5599506661185124,0.6550517227969199,0.7046744963832933,0.7133523705818954

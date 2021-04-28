@@ -83,12 +83,12 @@ def Drawbox(Dataframe, savepath):
 
     plt.clf()
     plt.figure(dpi=300,figsize=(16,8))
-    plt.ylabel("AUROC", fontsize='25')
+    plt.ylabel("AUROC", fontsize='15')
     # plt.ylim([0.5, 1])
     ax = sns.boxplot(data=Dataframe)
     ax.set_xticklabels(
     	ax.get_xticklabels(),
-    	rotation=20,
+    	rotation=0,
     	# horizontalalignment='right',
     	# fontweight='light',
     	fontsize=15
@@ -135,10 +135,10 @@ def main():
 
             path = resultpath+model+"/"+name+"/"
             if model =="vCNN":
-                name = "vConv-based network optimized with "+nameldict[name]
+                name = "vConv-based \n network optimized \n with "+nameldict[name]
                 AUCdict[name] = loadResult(path,model)
             else:
-                name = "CNN-based network optimized with " +nameldict[name]
+                name = "Convolution-based \n network optimized \n with " +nameldict[name]
                 AUCdict[name] = loadResult(path,model)
     AUCdataFrame = pd.DataFrame(AUCdict)
 
