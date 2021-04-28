@@ -44,6 +44,7 @@ ROC.ggplots.list <- all.best.metrics.dt %>%
 pdf(file="./vConvFigmain/result/Fig.4/Fig.4.all.ROCs.pdf", width=12, height=4, onefile=TRUE)
 foreach(temp.ROC.ggplot=ROC.ggplots.list) %do% {
     print(temp.ROC.ggplot)
+    NULL
 }
 dev.off()
 
