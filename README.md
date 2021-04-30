@@ -271,8 +271,10 @@ The figure generated is located at
 
 ### 1.4.7 Reproduce Supplementary Figure 9
 
+Supplementary Figure 9 is generated together with Figure 4.
+
 ```{bash}
-Rscript ./vConvFigmain/code/generate_supplementary_figure_9.R
+Rscript ./vConvFigmain/code/generate_figure_4.R
 ```
 
 The figure generated is located at `./vConvFigmain/result/Supplementary.Fig.9/Supplementary.Fig.9.png`.
