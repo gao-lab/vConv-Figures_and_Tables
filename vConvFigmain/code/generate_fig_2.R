@@ -9,17 +9,37 @@ dir.create("./vConvFigmain/result/Fig.2/", recursive=TRUE)
 auroc.dt <- foreach(temp.dataset=c("2", "4", "6", "8", "TwoDif1", "TwoDif2", "TwoDif3")) %do% {
     data.table(
         dataset=temp.dataset,
-        vConv.AUROC=paste(sep="", "./vConvFigmain/files.F2/JasperMotif/", temp.dataset, "_vCNNbestRandom_auc.txt") %>% {scan(file=., what=double())},
-        CNN.AUROC=paste(sep="", "./vConvFigmain/files.F2/JasperMotif/", temp.dataset, "_CNNbestRandom_auc.txt") %>% {scan(file=., what=double())}
-    ) %>% {.[, AUROC.increment:=vConv.AUROC-CNN.AUROC]} %>% {.[, index:=.I]} } %>%
+        CNN.AUROC=paste(sep="", "./vConvFigmain/files.SF6/JasperMotif/", temp.dataset, "_CNN_auc.txt") %>% {scan(file=., what=double())},
+        vConv.AUROC=paste(sep="", "./vConvFigmain/files.SF6/JasperMotif/", temp.dataset, "_vCNN_auc.txt") %>% {scan(file=., what=double())}
+    ) %>% {.[, index:=.I]} %>% {.[, pct.of.vConv.is.better.to.plot:=(sum(vConv.AUROC > CNN.AUROC)/.N) %>% round(4) %>% {.*100}]}} %>%
     rbindlist %>%
-    {.[, dataset.to.plot:=c("2"="2 motifs", "4"="4 motifs", "6"="6 motifs", "8"="8 motifs", "TwoDif1"="TwoDiffMotif1", "TwoDif2"="TwoDiffMotif2", "TwoDif3"="TwoDiffMotif3")[dataset]]}
+    {.[, dataset.to.plot:=c("2"="2 motifs", "4"="4 motifs", "6"="6 motifs", "8"="8 motifs", "TwoDif1"="TwoDiffMotif1", "TwoDif2"="TwoDiffMotif2", "TwoDif3"="TwoDiffMotif3")[dataset]]} %>%
+    {.[, title:=paste(sep="", dataset.to.plot, ":", pct.of.vConv.is.better.to.plot, "%")]}
 
-auroc.melt.dt <- melt(data=auroc.dt, id.vars=c("dataset", "dataset.to.plot", "index"), measure.vars=c("vConv.AUROC", "CNN.AUROC"), variable.name="model", value.name="AUROC")[, model.to.plot := c("vConv.AUROC"="vConv-based", "CNN.AUROC"="convolution-based")[model]]
+auroc.dt %>%
+    {.[,
+     `:=`(
+         vConv.AUROC.Q25=quantile(vConv.AUROC, probs=0.25),
+         vConv.AUROC.Q75=quantile(vConv.AUROC, probs=0.75),
+         CNN.AUROC.Q25=quantile(CNN.AUROC, probs=0.25),
+         CNN.AUROC.Q75=quantile(CNN.AUROC, probs=0.75)
+     ),
+     list(dataset)]} %>%
+    {.[, `:=`(
+         vConv.AUROC.lower.outlier.threshold=vConv.AUROC.Q25 - 1.5 * (vConv.AUROC.Q75 - vConv.AUROC.Q25),
+         CNN.AUROC.lower.outlier.threshold=CNN.AUROC.Q25 - 1.5 * (CNN.AUROC.Q75 - CNN.AUROC.Q25)
+     )]}
 
-F2A.ggplot <- ggboxplot(data=auroc.melt.dt, x="model.to.plot", y="AUROC", fill="model.to.plot", palette="npg") + labs(x="", y="\n\nAUROC", fill="") + facet_grid(~dataset.to.plot) + theme(axis.text.x=element_blank())
+temp.ggplot <- ggscatter(data=auroc.dt, x="vConv.AUROC", y="CNN.AUROC", size=1, alpha=0.2, color="#53C1A5", palette="npg") +
+    labs(x="vConv-based network's AUROC", y="convolution-based\nnetwork's AUROC") +
+    geom_abline(slope=1, intercept=c(0, 0)) +
+    geom_hline(aes(yintercept=CNN.AUROC.lower.outlier.threshold), color="#4DBBD5", linetype="dashed") + 
+    geom_vline(aes(xintercept=vConv.AUROC.lower.outlier.threshold), color="#E64B35", linetype="dashed") + 
+    facet_wrap(~title, ncol=2) + lims(x=c(0.0, 1), y=c(0.0, 1)); temp.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.2/Additional.Fig.3.png", plot=., device="png", width=12, height=23.5, units="cm")}
 
-F2B.ggplot <- ggbarplot(data=auroc.dt, x="dataset.to.plot", y="AUROC.increment", fill="#53C1A5", palette="npg", add="mean_se") + labs(x="", y="Improvement in AUROC by\nvConv-based network") + theme(axis.text.x=element_text(angle=45, hjust=1))
 
-ggarrange(plotlist=list(F2A.ggplot, F2B.ggplot), ncol=1, labels=c("A", "B"), heights=c(0.45, 0.55)) %>% {ggsave(filename="./vConvFigmain/result/Fig.2/Fig.2.png", plot=., device="png", width=20, height=18, units="cm")}
+temp.no.dashed.lines.0.4.to.1.0.3.col.ggplot <- ggscatter(data=auroc.dt, x="vConv.AUROC", y="CNN.AUROC", size=1, alpha=0.2, color="#53C1A5", palette="npg") +
+    labs(x="vConv-based network's AUROC", y="convolution-based\nnetwork's AUROC") +
+    geom_abline(slope=1, intercept=c(0, 0)) +
+    facet_wrap(~title, ncol=3) + lims(x=c(0.4, 1), y=c(0.4, 1)); temp.no.dashed.lines.0.4.to.1.0.3.col.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.2/Fig.2.png", plot=., device="png", width=18, height=18.5, units="cm")}
 
