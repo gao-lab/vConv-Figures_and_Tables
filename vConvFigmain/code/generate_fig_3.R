@@ -41,8 +41,8 @@ simple.basset.ggplot <- ggboxplot(data=auc.simple.basset.dt, x="model.to.plot", 
 
 
 
-basset.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.3/Additional.Fig.1.png", plot=., device="png", width=20/3, height=16, units="cm")}
+## basset.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.3/Additional.Fig.1.png", plot=., device="png", width=20/3, height=16, units="cm")}
 
-basset.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.3/Supplementary.Fig.X.png", plot=., device="png", width=20/3, height=16, units="cm")}
+## basset.ggplot %>% {ggsave(filename="./vConvFigmain/result/Fig.3/Supplementary.Fig.X.png", plot=., device="png", width=20/3, height=16, units="cm")}
 
 ggarrange(plotlist=list(deepbind.ggplot, zeng.ggplot, simple.basset.ggplot), nrow=1, labels=c("A", "B", "C")) %>% {ggsave(filename="./vConvFigmain/result/Fig.3/Fig.3.png", plot=., device="png", width=20, height=16, units="cm")}
