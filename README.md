@@ -25,7 +25,7 @@
     + [1.4.5 Reproduce Supplementary Figure 7](#145-reproduce-supplementary-figure-7)
     + [1.4.6 Reproduce Supplementary Figure 8](#146-reproduce-supplementary-figure-8)
     + [1.4.7 Reproduce Supplementary Figure 10](#148-reproduce-supplementary-figure-10)
-    + [1.4.8 Reproduce Supplementary Figure 10](#148-reproduce-supplementary-figure-11)
+    + [1.4.8 Reproduce Supplementary Figure 11](#148-reproduce-supplementary-figure-11)
     + [1.4.9 Reproduce Supplementary Table 2](#149-reproduce-supplementary-table-2)
     + [1.4.10 Reproduce Supplementary Table 3](#1410-reproduce-supplementary-table-3)
 - [Step 2: Reproduce Figure 4 (benchmarking models on motif discovery)](#step-2-reproduce-figure-4-benchmarking-models-on-motif-discovery)
