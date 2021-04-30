@@ -269,15 +269,9 @@ The figure generated is located at
 - TwoDiffMotif3: `output/SpeedTest/Png/TwoDiff3.jpg`
 - Basset: `output/SpeedTest/Png/basset.jpg`
 
-### 1.4.7 Reproduce Supplementary Figure 9
 
-Supplementary Figure 9 is generated together with Figure 4.
 
-```{bash}
-Rscript ./vConvFigmain/code/generate_figure_4.R
-```
 
-The figure generated is located at `./vConvFigmain/result/Supplementary.Fig.9/Supplementary.Fig.9.png`.
 
 ### 1.4.8 Reproduce Supplementary Figure 10
 
@@ -389,13 +383,17 @@ tar -C ./vConvMotifDiscovery/output/ -xzvf ./vConvMotifDiscovery/output/AUChdf5.
 ```
 
 
-## 2.3 Reproduce Figure 4
+## 2.3 Reproduce Figure 4 (and Supplementary Figure 9)
+
+Supplementary Figure 9 is generated together with Figure 4.
 
 ```{bash}
 Rscript ./vConvFigmain/code/generate_fig_4.R
 ```
 
-The figure generated is located at `vConvFigmain/result/Fig.4/Fig.4.png`
+Figure 4 generated is located at `vConvFigmain/result/Fig.4/Fig.4.png`.
+
+Supplementary Figure 9 generated is located at `./vConvFigmain/result/Supplementary.Fig.9/Supplementary.Fig.9.png`.
 
 
 # Step 3: Reproduce Supplementary Fig. 11 B-I (theoretical analysis)
