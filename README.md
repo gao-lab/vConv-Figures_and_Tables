@@ -24,7 +24,8 @@
     + [1.4.4 Reproduce Supplementary Figure 6](#144-reproduce-supplementary-figure-6)
     + [1.4.5 Reproduce Supplementary Figure 7](#145-reproduce-supplementary-figure-7)
     + [1.4.6 Reproduce Supplementary Figure 8](#146-reproduce-supplementary-figure-8)
-    + [1.4.8 Reproduce Supplementary Figure 10](#148-reproduce-supplementary-figure-10)
+    + [1.4.7 Reproduce Supplementary Figure 10](#148-reproduce-supplementary-figure-10)
+    + [1.4.8 Reproduce Supplementary Figure 10](#148-reproduce-supplementary-figure-11)
     + [1.4.9 Reproduce Supplementary Table 2](#149-reproduce-supplementary-table-2)
     + [1.4.10 Reproduce Supplementary Table 3](#1410-reproduce-supplementary-table-3)
 - [Step 2: Reproduce Figure 4 (benchmarking models on motif discovery)](#step-2-reproduce-figure-4-benchmarking-models-on-motif-discovery)
@@ -241,16 +242,30 @@ The figure generated is located at `./vConvFigmain/result/Supplementary.Fig.6/Su
 ### 1.4.5 Reproduce Supplementary Figure 7
 
 ```{bash}
+Rscript ./vConvFigmain/code/generate_supplementary_figure_7.R
+```
+The figure generated is located at `./vConvFigmain/result/Supplementary.Fig.7/Supplementary.Fig.7.png`.
+
+
+
+### 1.4.6 Reproduce Supplementary Figure 8
+
+```{bash}
 cd ./output/code
 python checkResultComparedZengSearch.py
 cd -
 ```
 The figure generated is located at
-- Supp. Fig. 7A: `output/ModelAUC/ChIPSeq/Pic/worseData/DataSize.png`
-- Supp. Fig. 7B: `output/ModelAUC/ChIPSeq/Pic/worseData/DataSizeWorseCase.png`
-- Supp. Fig. 7C: `"output/ModelAUC/ChIPSeq/Pic/convolution-based network from Zeng et al., 2016Boxplot.png"`
+- Supp. Fig. 8A: `output/ModelAUC/ChIPSeq/Pic/worseData/DataSize.png`
+- Supp. Fig. 8B: `output/ModelAUC/ChIPSeq/Pic/worseData/DataSizeWorseCase.png`
+- Supp. Fig. 8C: `"output/ModelAUC/ChIPSeq/Pic/convolution-based network from Zeng et al., 2016Boxplot.png"`
 
-### 1.4.6 Reproduce Supplementary Figure 8
+
+
+
+
+
+### 1.4.7 Reproduce Supplementary Figure 10
 
 ```{bash}
 cd ./output/SpeedTest/code
@@ -269,16 +284,14 @@ The figure generated is located at
 - Basset: `output/SpeedTest/Png/basset.jpg`
 
 
+### 1.4.8 Reproduce Supplementary Figure 11
 
-
-
-### 1.4.8 Reproduce Supplementary Figure 10
 
 ```{bash}
-Rscript ./vConvFigmain/code/generate_supplementary_figure_10.R
+Rscript ./vConvFigmain/code/generate_supplementary_figure_11.R
 ```
 
-The figure generated is located at `./vConvFigmain/result/Supplementary.Fig.10/Supplementary.Fig.10.png`.
+The figure generated is located at `./vConvFigmain/result/Supplementary.Fig.11/Supplementary.Fig.11.png`.
 
 
 ### 1.4.9 Reproduce Supplementary Table 2
@@ -395,9 +408,9 @@ Figure 4 generated is located at `vConvFigmain/result/Fig.4/Fig.4.png`.
 Supplementary Figure 9 generated is located at `./vConvFigmain/result/Supplementary.Fig.9/Supplementary.Fig.9.png`.
 
 
-# Step 3: Reproduce Supplementary Fig. 11 B-I (theoretical analysis)
+# Step 3: Reproduce Supplementary Fig. 12 B-I (theoretical analysis)
 
-## 3.1 Prepare datasets and results needed by Supp. Fig. 11 B-I
+## 3.1 Prepare datasets and results needed by Supp. Fig. 12 B-I
 
 ```{bash}
 cd theoretical/code/
@@ -406,7 +419,7 @@ python trainCNN.py
 cd -
 ```
 
-## 3.2 Reproduce Supplementary Fig. 11 B-I
+## 3.2 Reproduce Supplementary Fig. 12 B-I
 ```{bash}
 cd theoretical/code/
 python plotFigures.py
@@ -414,14 +427,14 @@ cd -
 ```
 
 The figure generated is located at:
-- Supp. Fig. 11B: `theoretical/Motif/ICSimu/simuMtf_Len-8_totIC-10.png`
-- Supp. Fig. 11C: `theoretical/Motif/ICSimu/simuMtf_Len-23_totIC-12.png`
-- Supp. Fig. 11D: `theoretical/figure/simuMtf_Len-8_totIC-10.png`
-- Supp. Fig. 11E: `theoretical/figure/simuMtf_Len-23_totIC-12.png`
-- Supp. Fig. 11F: `theoretical/figure/simuMtf_Len-8_totIC-10rank.png`
-- Supp. Fig. 11G: `theoretical/figure/simuMtf_Len-23_totIC-12rank.png`
-- Supp. Fig. 11H: `theoretical/figure/simu01.png`
-- Supp. Fig. 11I: `theoretical/figure/simu02.png`
+- Supp. Fig. 12B: `theoretical/Motif/ICSimu/simuMtf_Len-8_totIC-10.png`
+- Supp. Fig. 12C: `theoretical/Motif/ICSimu/simuMtf_Len-23_totIC-12.png`
+- Supp. Fig. 12D: `theoretical/figure/simuMtf_Len-8_totIC-10.png`
+- Supp. Fig. 12E: `theoretical/figure/simuMtf_Len-23_totIC-12.png`
+- Supp. Fig. 12F: `theoretical/figure/simuMtf_Len-8_totIC-10rank.png`
+- Supp. Fig. 12G: `theoretical/figure/simuMtf_Len-23_totIC-12rank.png`
+- Supp. Fig. 12H: `theoretical/figure/simu01.png`
+- Supp. Fig. 12I: `theoretical/figure/simu02.png`
 
 
 
